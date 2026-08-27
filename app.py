@@ -5,13 +5,14 @@ import glob
 import cv2
 import numpy as np
 import pytesseract
+
 from PIL import Image
 from gtts import gTTS
 from googletrans import Translator
 
 
 # ============================================================
-# CONFIGURACIÓN
+# CONFIGURACIÓN DE LA PÁGINA
 # ============================================================
 
 st.set_page_config(
@@ -21,193 +22,600 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+
+# ============================================================
+# CONFIGURACIÓN GENERAL
+# ============================================================
+
+TEMP_FOLDER = "temp"
+
+os.makedirs(TEMP_FOLDER, exist_ok=True)
+
 translator = Translator()
 
-# Crear carpeta temporal
-os.makedirs("temp", exist_ok=True)
+
+# ============================================================
+# IDIOMAS
+# ============================================================
+
+# Nombre mostrado:
+#   bandera + idioma
+#
+# translation = código utilizado por Google Translate
+#
+# tesseract = código utilizado por Tesseract OCR
+
+LANGUAGES = {
+    "🇺🇸 English": {
+        "translation": "en",
+        "tesseract": "eng"
+    },
+
+    "🇪🇸 Español": {
+        "translation": "es",
+        "tesseract": "spa"
+    },
+
+    "🇫🇷 Français": {
+        "translation": "fr",
+        "tesseract": "fra"
+    },
+
+    "🇩🇪 Deutsch": {
+        "translation": "de",
+        "tesseract": "deu"
+    },
+
+    "🇮🇹 Italiano": {
+        "translation": "it",
+        "tesseract": "ita"
+    },
+
+    "🇵🇹 Português": {
+        "translation": "pt",
+        "tesseract": "por"
+    },
+
+    "🇧🇷 Português (Brasil)": {
+        "translation": "pt",
+        "tesseract": "por"
+    },
+
+    "🇳🇱 Nederlands": {
+        "translation": "nl",
+        "tesseract": "nld"
+    },
+
+    "🇷🇺 Русский": {
+        "translation": "ru",
+        "tesseract": "rus"
+    },
+
+    "🇺🇦 Українська": {
+        "translation": "uk",
+        "tesseract": "ukr"
+    },
+
+    "🇵🇱 Polski": {
+        "translation": "pl",
+        "tesseract": "pol"
+    },
+
+    "🇨🇿 Čeština": {
+        "translation": "cs",
+        "tesseract": "ces"
+    },
+
+    "🇸🇰 Slovenčina": {
+        "translation": "sk",
+        "tesseract": "slk"
+    },
+
+    "🇭🇺 Magyar": {
+        "translation": "hu",
+        "tesseract": "hun"
+    },
+
+    "🇷🇴 Română": {
+        "translation": "ro",
+        "tesseract": "ron"
+    },
+
+    "🇹🇷 Türkçe": {
+        "translation": "tr",
+        "tesseract": "tur"
+    },
+
+    "🇬🇷 Ελληνικά": {
+        "translation": "el",
+        "tesseract": "ell"
+    },
+
+    "🇸🇪 Svenska": {
+        "translation": "sv",
+        "tesseract": "swe"
+    },
+
+    "🇩🇰 Dansk": {
+        "translation": "da",
+        "tesseract": "dan"
+    },
+
+    "🇫🇮 Suomi": {
+        "translation": "fi",
+        "tesseract": "fin"
+    },
+
+    "🇳🇴 Norsk": {
+        "translation": "no",
+        "tesseract": "nor"
+    },
+
+    "🇮🇳 हिन्दी": {
+        "translation": "hi",
+        "tesseract": "hin"
+    },
+
+    "🇧🇩 বাংলা": {
+        "translation": "bn",
+        "tesseract": "ben"
+    },
+
+    "🇮🇩 Bahasa Indonesia": {
+        "translation": "id",
+        "tesseract": "ind"
+    },
+
+    "🇻🇳 Tiếng Việt": {
+        "translation": "vi",
+        "tesseract": "vie"
+    },
+
+    "🇹🇭 ไทย": {
+        "translation": "th",
+        "tesseract": "tha"
+    },
+
+    "🇰🇷 한국어": {
+        "translation": "ko",
+        "tesseract": "kor"
+    },
+
+    "🇯🇵 日本語": {
+        "translation": "ja",
+        "tesseract": "jpn"
+    },
+
+    "🇨🇳 简体中文": {
+        "translation": "zh-cn",
+        "tesseract": "chi_sim"
+    },
+
+    "🇹🇼 繁體中文": {
+        "translation": "zh-tw",
+        "tesseract": "chi_tra"
+    },
+
+    "🇸🇦 العربية": {
+        "translation": "ar",
+        "tesseract": "ara"
+    },
+
+    "🇮🇱 עברית": {
+        "translation": "iw",
+        "tesseract": "heb"
+    }
+}
+
+
+LANGUAGE_NAMES = list(LANGUAGES.keys())
+
+
+# ============================================================
+# ACENTOS
+# ============================================================
+
+ACCENTS = {
+    "🌎 Default": "com",
+    "🇺🇸 United States": "com",
+    "🇬🇧 United Kingdom": "co.uk",
+    "🇨🇦 Canada": "ca",
+    "🇦🇺 Australia": "com.au",
+    "🇮🇳 India": "co.in",
+    "🇮🇪 Ireland": "ie",
+    "🇿🇦 South Africa": "co.za"
+}
 
 
 # ============================================================
 # ESTILOS
 # ============================================================
 
-st.markdown("""
+st.markdown(
+"""
 <style>
 
-    /* ---------- FONDO GENERAL ---------- */
+/* =========================================================
+   GENERAL
+   ========================================================= */
 
-    .stApp {
-        background: linear-gradient(135deg, #f5f9ff 0%, #eef4ff 50%, #f8fbff 100%);
-    }
+.stApp {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(74, 144, 226, 0.12),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #f5f8ff 0%,
+            #eef4ff 50%,
+            #f9fbff 100%
+        );
+}
 
-    .main {
-        padding-top: 1rem;
-    }
+.main {
+    padding-top: 1rem;
+}
 
-    /* ---------- OCULTAR ELEMENTOS DE STREAMLIT ---------- */
+#MainMenu {
+    visibility: hidden;
+}
 
-    #MainMenu {
-        visibility: hidden;
-    }
+footer {
+    visibility: hidden;
+}
 
-    footer {
-        visibility: hidden;
-    }
+header {
+    background: transparent;
+}
 
-    /* ---------- TITULO ---------- */
 
-    .main-title {
-        text-align: center;
-        font-size: 3rem;
-        font-weight: 800;
-        color: #173B6C;
-        margin-bottom: 0.2rem;
-    }
+/* =========================================================
+   HERO
+   ========================================================= */
 
-    .main-subtitle {
-        text-align: center;
-        font-size: 1.15rem;
-        color: #61708A;
-        margin-bottom: 2rem;
-    }
+.hero {
+    background: linear-gradient(
+        135deg,
+        #2563eb 0%,
+        #4f8df7 50%,
+        #60a5fa 100%
+    );
 
-    /* ---------- TARJETAS ---------- */
+    border-radius: 28px;
 
-    .card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 20px;
-        box-shadow: 0 8px 30px rgba(31, 65, 114, 0.08);
-        border: 1px solid #e7eef8;
-        margin-bottom: 1.2rem;
-    }
+    padding: 45px 30px;
 
-    .card-title {
-        color: #173B6C;
-        font-size: 1.35rem;
-        font-weight: 700;
-        margin-bottom: 0.3rem;
-    }
+    margin-bottom: 30px;
 
-    .card-description {
-        color: #6B7890;
-        font-size: 0.95rem;
-        margin-bottom: 1rem;
-    }
+    text-align: center;
 
-    /* ---------- HERO ---------- */
+    color: white;
 
-    .hero {
-        background: linear-gradient(135deg, #1769E0, #4D9AFF);
-        border-radius: 25px;
-        padding: 2.2rem;
-        color: white;
-        text-align: center;
-        margin-bottom: 2rem;
-        box-shadow: 0 12px 35px rgba(23, 105, 224, 0.22);
-    }
+    box-shadow:
+        0 20px 45px rgba(37, 99, 235, 0.25);
+}
 
-    .hero h1 {
-        font-size: 2.6rem;
-        margin-bottom: 0.5rem;
-    }
+.hero-icon {
+    font-size: 55px;
+    margin-bottom: 5px;
+}
 
-    .hero p {
-        font-size: 1.1rem;
-        opacity: 0.92;
-    }
+.hero-title {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
 
-    /* ---------- BOTONES ---------- */
+.hero-subtitle {
+    font-size: 18px;
+    opacity: 0.92;
+    margin-top: 8px;
+}
 
-    .stButton > button {
-        width: 100%;
-        border-radius: 12px;
-        border: none;
-        background: linear-gradient(90deg, #1769E0, #388BFF);
-        color: white;
-        font-weight: 700;
-        padding: 0.65rem 1rem;
-        transition: 0.2s;
-    }
 
-    .stButton > button:hover {
-        background: linear-gradient(90deg, #0F57C5, #1769E0);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(23, 105, 224, 0.25);
-    }
+/* =========================================================
+   TARJETAS
+   ========================================================= */
 
-    /* ---------- SIDEBAR ---------- */
+.card {
+    background: rgba(255,255,255,0.96);
 
-    section[data-testid="stSidebar"] {
-        background: #ffffff;
-        border-right: 1px solid #e7eef8;
-    }
+    border: 1px solid #e6edf7;
 
-    section[data-testid="stSidebar"] h2,
-    section[data-testid="stSidebar"] h3 {
-        color: #173B6C;
-    }
+    border-radius: 20px;
 
-    /* ---------- RESULTADO ---------- */
+    padding: 24px;
 
-    .result-box {
-        background: #F0F7FF;
-        border-left: 5px solid #1769E0;
-        padding: 1.2rem;
-        border-radius: 12px;
-        margin-top: 1rem;
-    }
+    margin-bottom: 20px;
 
-    .result-title {
-        color: #1769E0;
-        font-size: 1.15rem;
-        font-weight: 700;
-    }
+    box-shadow:
+        0 8px 30px rgba(31, 65, 114, 0.07);
+}
 
-    /* ---------- PASOS ---------- */
+.card-title {
+    color: #173b6c;
 
-    .step {
-        background: white;
-        border-radius: 16px;
-        padding: 1rem;
-        text-align: center;
-        border: 1px solid #e7eef8;
-        box-shadow: 0 5px 20px rgba(31, 65, 114, 0.05);
-    }
+    font-size: 21px;
 
-    .step-icon {
-        font-size: 2rem;
-    }
+    font-weight: 750;
 
-    .step-title {
-        color: #173B6C;
-        font-weight: 700;
-        margin-top: 0.4rem;
-    }
+    margin-bottom: 5px;
+}
 
-    .step-text {
-        color: #718096;
-        font-size: 0.9rem;
-    }
+.card-description {
+    color: #718096;
 
-    /* ---------- FOOTER ---------- */
+    font-size: 14px;
 
-    .footer {
-        text-align: center;
-        color: #8A97AA;
-        padding: 2rem;
-        font-size: 0.85rem;
-    }
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   PASOS
+   ========================================================= */
+
+.step-card {
+    background: white;
+
+    border-radius: 18px;
+
+    border: 1px solid #e6edf7;
+
+    padding: 22px 15px;
+
+    text-align: center;
+
+    height: 145px;
+
+    box-shadow:
+        0 7px 22px rgba(31, 65, 114, 0.06);
+
+    transition: all 0.2s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 28px rgba(31, 65, 114, 0.11);
+}
+
+.step-icon {
+    font-size: 35px;
+}
+
+.step-title {
+    color: #173b6c;
+
+    font-weight: 700;
+
+    margin-top: 7px;
+}
+
+.step-description {
+    color: #7b8799;
+
+    font-size: 12px;
+
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+   SECCIÓN
+   ========================================================= */
+
+.section-title {
+    color: #173b6c;
+
+    font-size: 25px;
+
+    font-weight: 800;
+
+    margin-top: 25px;
+
+    margin-bottom: 12px;
+}
+
+
+/* =========================================================
+   RESULTADOS
+   ========================================================= */
+
+.detected-box {
+    background: #f8fbff;
+
+    border: 2px solid #dbeafe;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    margin-top: 10px;
+}
+
+.translation-box {
+    background: linear-gradient(
+        135deg,
+        #eff6ff,
+        #f5f9ff
+    );
+
+    border: 2px solid #bfdbfe;
+
+    border-radius: 18px;
+
+    padding: 22px;
+
+    margin-top: 15px;
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.stButton > button {
+    width: 100%;
+
+    min-height: 48px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    background: linear-gradient(
+        90deg,
+        #2563eb,
+        #3b82f6
+    );
+
+    color: white;
+
+    font-weight: 750;
+
+    font-size: 15px;
+
+    transition: all 0.2s ease;
+
+    box-shadow:
+        0 5px 15px rgba(37, 99, 235, 0.18);
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+
+    background: linear-gradient(
+        90deg,
+        #1d4ed8,
+        #2563eb
+    );
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+section[data-testid="stSidebar"] {
+    background: #ffffff;
+
+    border-right: 1px solid #e4ebf5;
+}
+
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+    color: #173b6c;
+}
+
+.sidebar-title {
+    color: #173b6c;
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    margin-bottom: 10px;
+}
+
+.sidebar-section {
+    color: #2563eb;
+
+    font-size: 14px;
+
+    font-weight: 750;
+
+    margin-top: 20px;
+
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   UPLOADER
+   ========================================================= */
+
+[data-testid="stFileUploader"] {
+    background: white;
+
+    border-radius: 15px;
+}
+
+
+/* =========================================================
+   TEXT AREA
+   ========================================================= */
+
+textarea {
+    border-radius: 13px !important;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+    text-align: center;
+
+    color: #8a97aa;
+
+    font-size: 12px;
+
+    padding: 35px 0 10px 0;
+}
 
 </style>
-""", unsafe_allow_html=True)
+""",
+unsafe_allow_html=True
+)
 
 
 # ============================================================
 # FUNCIONES
 # ============================================================
 
-def text_to_speech(input_language, output_language, text, tld):
+def clean_filename(text):
+    """
+    Crea un nombre de archivo seguro para el audio.
+    """
+
+    name = text[:30].strip()
+
+    if not name:
+        name = "translation"
+
+    name = "".join(
+        character
+        for character in name
+        if character.isalnum()
+        or character in (" ", "_", "-")
+    )
+
+    name = name.replace(" ", "_")
+
+    if not name:
+        name = "translation"
+
+    return name
+
+
+def text_to_speech(
+    input_language,
+    output_language,
+    text,
+    tld
+):
+    """
+    Traduce el texto y genera el audio.
+    """
 
     translation = translator.translate(
         text,
@@ -215,125 +623,156 @@ def text_to_speech(input_language, output_language, text, tld):
         dest=output_language
     )
 
-    trans_text = translation.text
+    translated_text = translation.text
+
+    filename = clean_filename(translated_text)
+
+    audio_path = os.path.join(
+        TEMP_FOLDER,
+        f"{filename}.mp3"
+    )
 
     tts = gTTS(
-        trans_text,
+        text=translated_text,
         lang=output_language,
         tld=tld,
         slow=False
     )
 
-    clean_name = text[:20].strip()
+    tts.save(audio_path)
 
-    if not clean_name:
-        clean_name = "audio"
+    return audio_path, translated_text
 
-    # Evitar caracteres problemáticos
-    clean_name = "".join(
-        c for c in clean_name
-        if c.isalnum() or c in (" ", "_", "-")
+
+def remove_old_files(days=7):
+    """
+    Elimina archivos MP3 antiguos.
+    """
+
+    files = glob.glob(
+        os.path.join(TEMP_FOLDER, "*.mp3")
     )
 
-    file_path = f"temp/{clean_name}.mp3"
-
-    tts.save(file_path)
-
-    return clean_name, trans_text
-
-
-def remove_files(n):
-
-    mp3_files = glob.glob("temp/*mp3")
-
-    if len(mp3_files) == 0:
-        return
-
     now = time.time()
-    n_days = n * 86400
 
-    for f in mp3_files:
+    max_age = days * 86400
 
-        if os.stat(f).st_mtime < now - n_days:
-            os.remove(f)
+    for file in files:
+
+        try:
+
+            if os.stat(file).st_mtime < now - max_age:
+                os.remove(file)
+
+        except Exception:
+            pass
 
 
-remove_files(7)
+def extract_text_from_image(
+    image_bytes,
+    tesseract_language,
+    apply_filter=False
+):
+    """
+    Extrae texto de una imagen utilizando Tesseract.
+    """
+
+    image_array = np.frombuffer(
+        image_bytes,
+        dtype=np.uint8
+    )
+
+    image = cv2.imdecode(
+        image_array,
+        cv2.IMREAD_COLOR
+    )
+
+    if image is None:
+        return "", None
+
+    if apply_filter:
+
+        gray = cv2.cvtColor(
+            image,
+            cv2.COLOR_BGR2GRAY
+        )
+
+        gray = cv2.GaussianBlur(
+            gray,
+            (3, 3),
+            0
+        )
+
+        image = cv2.threshold(
+            gray,
+            0,
+            255,
+            cv2.THRESH_BINARY + cv2.THRESH_OTSU
+        )[1]
+
+    else:
+
+        image = cv2.cvtColor(
+            image,
+            cv2.COLOR_BGR2RGB
+        )
+
+    try:
+
+        text = pytesseract.image_to_string(
+            image,
+            lang=tesseract_language
+        )
+
+    except pytesseract.TesseractError:
+
+        # Si el idioma de Tesseract no está instalado,
+        # intentamos utilizar inglés como alternativa.
+
+        try:
+
+            text = pytesseract.image_to_string(
+                image,
+                lang="eng"
+            )
+
+        except Exception:
+
+            text = ""
+
+    return text.strip(), image
 
 
 # ============================================================
-# HEADER / HERO
+# LIMPIEZA
 # ============================================================
 
-st.markdown("""
+remove_old_files(7)
+
+
+# ============================================================
+# HEADER
+# ============================================================
+
+st.markdown(
+"""
 <div class="hero">
 
-    <h1>🌎 EasyTranslate</h1>
+    <div class="hero-icon">🌎</div>
 
-    <p>
-        Traduce textos de imágenes fácilmente y escucha
-        la traducción en el idioma que necesites.
-    </p>
+    <div class="hero-title">
+        EasyTranslate
+    </div>
+
+    <div class="hero-subtitle">
+        Understand the world around you.
+        Translate text from images and listen to the result.
+    </div>
 
 </div>
-""", unsafe_allow_html=True)
-
-
-# ============================================================
-# EXPLICACIÓN
-# ============================================================
-
-st.markdown("""
-<div class="card">
-
-<div class="card-title">✨ ¿Cómo funciona?</div>
-
-<div class="card-description">
-No necesitas escribir el texto manualmente. 
-Simplemente carga una imagen o utiliza tu cámara.
-</div>
-
-</div>
-""", unsafe_allow_html=True)
-
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("""
-    <div class="step">
-        <div class="step-icon">📷</div>
-        <div class="step-title">1. Toma una foto</div>
-        <div class="step-text">
-            Fotografía un menú, señal, documento o texto.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-    <div class="step">
-        <div class="step-icon">🔍</div>
-        <div class="step-title">2. Detectamos el texto</div>
-        <div class="step-text">
-            Nuestro sistema reconoce automáticamente las palabras.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("""
-    <div class="step">
-        <div class="step-icon">🔊</div>
-        <div class="step-title">3. Escucha la traducción</div>
-        <div class="step-text">
-            Obtén la traducción y escucha cómo se pronuncia.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-st.write("")
+""",
+unsafe_allow_html=True
+)
 
 
 # ============================================================
@@ -342,152 +781,334 @@ st.write("")
 
 with st.sidebar:
 
-    st.markdown("## ⚙️ Configuración")
+    st.markdown(
+        '<div class="sidebar-title">⚙️ Settings</div>',
+        unsafe_allow_html=True
+    )
 
     st.markdown("---")
 
     # --------------------------------------------------------
-    # IDIOMA DE ENTRADA
+    # IDIOMA DE ORIGEN
     # --------------------------------------------------------
 
-    st.markdown("### 🌐 Idioma de la imagen")
-
-    languages = {
-        "🇺🇸 Inglés": "en",
-        "🇪🇸 Español": "es",
-        "🇧🇩 Bengalí": "bn",
-        "🇰🇷 Coreano": "ko",
-        "🇨🇳 Mandarín": "zh-cn",
-        "🇯🇵 Japonés": "ja"
-    }
-
-    input_language_name = st.selectbox(
-        "El texto de la imagen está en:",
-        list(languages.keys())
+    st.markdown(
+        '<div class="sidebar-section">🌐 IMAGE LANGUAGE</div>',
+        unsafe_allow_html=True
     )
 
-    input_language = languages[input_language_name]
-
-
-    # --------------------------------------------------------
-    # IDIOMA DE SALIDA
-    # --------------------------------------------------------
-
-    st.markdown("### 🔄 Idioma de traducción")
-
-    output_language_name = st.selectbox(
-        "Quiero traducirlo a:",
-        list(languages.keys()),
+    input_language_name = st.selectbox(
+        "What language is in the image?",
+        LANGUAGE_NAMES,
         index=1
     )
 
-    output_language = languages[output_language_name]
+    input_language = LANGUAGES[
+        input_language_name
+    ]["translation"]
+
+    tesseract_language = LANGUAGES[
+        input_language_name
+    ]["tesseract"]
+
+
+    # --------------------------------------------------------
+    # IDIOMA DESTINO
+    # --------------------------------------------------------
+
+    st.markdown(
+        '<div class="sidebar-section">🔄 TRANSLATION LANGUAGE</div>',
+        unsafe_allow_html=True
+    )
+
+    default_output_index = (
+        LANGUAGE_NAMES.index("🇺🇸 English")
+    )
+
+    output_language_name = st.selectbox(
+        "Translate to:",
+        LANGUAGE_NAMES,
+        index=default_output_index
+    )
+
+    output_language = LANGUAGES[
+        output_language_name
+    ]["translation"]
 
 
     # --------------------------------------------------------
     # ACENTO
     # --------------------------------------------------------
 
-    st.markdown("### 🗣️ Acento")
-
-    accents = {
-        "🌎 Predeterminado": "com",
-        "🇮🇳 India": "co.in",
-        "🇬🇧 Reino Unido": "co.uk",
-        "🇺🇸 Estados Unidos": "com",
-        "🇨🇦 Canadá": "ca",
-        "🇦🇺 Australia": "com.au",
-        "🇮🇪 Irlanda": "ie",
-        "🇿🇦 Sudáfrica": "co.za"
-    }
+    st.markdown(
+        '<div class="sidebar-section">🔊 VOICE</div>',
+        unsafe_allow_html=True
+    )
 
     accent_name = st.selectbox(
-        "Selecciona el acento:",
-        list(accents.keys())
+        "Voice accent:",
+        list(ACCENTS.keys())
     )
 
-    tld = accents[accent_name]
+    tld = ACCENTS[accent_name]
 
 
     # --------------------------------------------------------
-    # TEXTO DE SALIDA
+    # OCR
     # --------------------------------------------------------
 
-    st.markdown("### 📄 Resultado")
+    st.markdown(
+        '<div class="sidebar-section">🔍 IMAGE PROCESSING</div>',
+        unsafe_allow_html=True
+    )
+
+    apply_filter = st.checkbox(
+        "✨ Improve image before reading",
+        value=False
+    )
+
+
+    # --------------------------------------------------------
+    # RESULTADO
+    # --------------------------------------------------------
+
+    st.markdown(
+        '<div class="sidebar-section">📄 RESULT</div>',
+        unsafe_allow_html=True
+    )
 
     display_output_text = st.checkbox(
-        "Mostrar el texto traducido",
+        "Show translated text",
         value=True
     )
+
+
+    # --------------------------------------------------------
+    # INFORMACIÓN
+    # --------------------------------------------------------
 
     st.markdown("---")
 
     st.info(
-        "💡 Consejo: utiliza imágenes claras y con buena iluminación "
-        "para obtener mejores resultados."
+        "💡 For best results, use a clear image with "
+        "good lighting and readable text."
     )
 
 
 # ============================================================
-# ÁREA PRINCIPAL
+# PASOS
 # ============================================================
 
-st.markdown("""
+st.markdown(
+    '<div class="section-title">✨ How does it work?</div>',
+    unsafe_allow_html=True
+)
+
+step1, step2, step3 = st.columns(3)
+
+
+with step1:
+
+    st.markdown(
+    """
+    <div class="step-card">
+
+        <div class="step-icon">📷</div>
+
+        <div class="step-title">
+            1. Take a photo
+        </div>
+
+        <div class="step-description">
+            Photograph a menu, sign or document.
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True
+    )
+
+
+with step2:
+
+    st.markdown(
+    """
+    <div class="step-card">
+
+        <div class="step-icon">🔍</div>
+
+        <div class="step-title">
+            2. Detect text
+        </div>
+
+        <div class="step-description">
+            We automatically recognize the words.
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True
+    )
+
+
+with step3:
+
+    st.markdown(
+    """
+    <div class="step-card">
+
+        <div class="step-icon">🔊</div>
+
+        <div class="step-title">
+            3. Listen
+        </div>
+
+        <div class="step-description">
+            Hear the translation in your language.
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True
+    )
+
+
+# ============================================================
+# TÍTULO DE CAPTURA
+# ============================================================
+
+st.markdown(
+    '<div class="section-title">📸 Choose an image</div>',
+    unsafe_allow_html=True
+)
+
+
+st.markdown(
+"""
 <div class="card">
 
-<div class="card-title">📸 Selecciona una imagen</div>
+    <div class="card-title">
+        📷 Camera or 📁 Upload
+    </div>
 
-<div class="card-description">
-Puedes utilizar la cámara de tu dispositivo o subir una imagen
-desde tu ordenador o teléfono.
-</div>
+    <div class="card-description">
+        Take a picture with your camera or upload an
+        existing image from your device.
+    </div>
 
 </div>
-""", unsafe_allow_html=True)
+""",
+unsafe_allow_html=True
+)
 
 
 # ============================================================
-# CÁMARA / ARCHIVO
+# CÁMARA / UPLOAD
 # ============================================================
 
-camera_col, upload_col = st.columns(2)
+camera_column, upload_column = st.columns(2)
 
 
-with camera_col:
+camera_image = None
+uploaded_image = None
 
-    st.markdown("### 📷 Cámara")
+
+# ============================================================
+# CÁMARA
+# ============================================================
+
+with camera_column:
+
+    st.markdown("### 📷 Camera")
 
     use_camera = st.checkbox(
-        "Usar cámara",
-        value=False
+        "Use camera"
     )
 
     if use_camera:
 
-        filter_option = st.radio(
-            "Mejorar imagen",
-            ("Sí", "No"),
-            horizontal=True
+        camera_image = st.camera_input(
+            "Take a photo"
         )
 
-        img_file_buffer = st.camera_input(
-            "Toma una fotografía"
-        )
 
-    else:
+# ============================================================
+# UPLOAD
+# ============================================================
 
-        img_file_buffer = None
-        filter_option = "No"
+with upload_column:
+
+    st.markdown("### 📁 Upload image")
+
+    uploaded_image = st.file_uploader(
+        "Choose an image",
+        type=[
+            "png",
+            "jpg",
+            "jpeg",
+            "webp"
+        ]
+    )
 
 
-with upload_col:
+# ============================================================
+# VARIABLE DEL TEXTO
+# ============================================================
 
-    st.markdown("### 📁 Subir imagen")
+detected_text = ""
 
-    bg_image = st.file_uploader(
-        "Selecciona una imagen",
-        type=["png", "jpg", "jpeg"],
-        help="Formatos compatibles: PNG, JPG y JPEG"
+
+# ============================================================
+# PROCESAR IMAGEN SUBIDA
+# ============================================================
+
+if uploaded_image is not None:
+
+    st.markdown(
+        '<div class="section-title">🖼️ Your image</div>',
+        unsafe_allow_html=True
+    )
+
+    image_bytes = uploaded_image.getvalue()
+
+    pil_image = Image.open(
+        uploaded_image
+    )
+
+    st.image(
+        pil_image,
+        use_container_width=True
+    )
+
+    detected_text, processed_image = extract_text_from_image(
+        image_bytes,
+        tesseract_language,
+        apply_filter
+    )
+
+
+# ============================================================
+# PROCESAR CÁMARA
+# ============================================================
+
+elif camera_image is not None:
+
+    st.markdown(
+        '<div class="section-title">🖼️ Your photo</div>',
+        unsafe_allow_html=True
+    )
+
+    image_bytes = camera_image.getvalue()
+
+    detected_text, processed_image = extract_text_from_image(
+        image_bytes,
+        tesseract_language,
+        apply_filter
+    )
+
+    st.image(
+        image_bytes,
+        use_container_width=True
     )
 
 
@@ -495,204 +1116,215 @@ with upload_col:
 # TEXTO DETECTADO
 # ============================================================
 
-text = ""
+if detected_text:
 
-
-# ------------------------------------------------------------
-# IMAGEN SUBIDA
-# ------------------------------------------------------------
-
-if bg_image is not None:
-
-    st.markdown("### 🖼️ Imagen seleccionada")
-
-    uploaded_image = Image.open(bg_image)
-
-    st.image(
-        uploaded_image,
-        caption="Imagen cargada",
-        use_container_width=True
+    st.markdown(
+        '<div class="section-title">📝 Detected text</div>',
+        unsafe_allow_html=True
     )
 
-    img_cv = cv2.imread(bg_image.name)
+    st.markdown(
+    """
+    <div class="detected-box">
 
-    # Si OpenCV no puede leer directamente el archivo,
-    # usamos los bytes del uploader.
-    if img_cv is None:
-
-        file_bytes = np.asarray(
-            bytearray(bg_image.read()),
-            dtype=np.uint8
-        )
-
-        img_cv = cv2.imdecode(
-            file_bytes,
-            cv2.IMREAD_COLOR
-        )
-
-    img_rgb = cv2.cvtColor(
-        img_cv,
-        cv2.COLOR_BGR2RGB
-    )
-
-    text = pytesseract.image_to_string(
-        img_rgb
-    )
-
-
-# ------------------------------------------------------------
-# CÁMARA
-# ------------------------------------------------------------
-
-if img_file_buffer is not None:
-
-    st.markdown("### 🔎 Texto detectado")
-
-    bytes_data = img_file_buffer.getvalue()
-
-    cv2_img = cv2.imdecode(
-        np.frombuffer(bytes_data, np.uint8),
-        cv2.IMREAD_COLOR
-    )
-
-    # Aplicar filtro
-    if filter_option == "Sí":
-
-        gray = cv2.cvtColor(
-            cv2_img,
-            cv2.COLOR_BGR2GRAY
-        )
-
-        cv2_img = cv2.threshold(
-            gray,
-            0,
-            255,
-            cv2.THRESH_BINARY + cv2.THRESH_OTSU
-        )[1]
-
-    img_rgb = cv2.cvtColor(
-        cv2_img,
-        cv2.COLOR_BGR2RGB
-    )
-
-    text = pytesseract.image_to_string(
-        img_rgb
-    )
-
-
-# ============================================================
-# MOSTRAR TEXTO DETECTADO
-# ============================================================
-
-if text.strip():
-
-    st.markdown("""
-    <div class="result-box">
-
-        <div class="result-title">
-            📝 Texto detectado
+        <div class="card-description">
+            Review the detected text below.
+            You can edit it before translating.
         </div>
 
     </div>
-    """, unsafe_allow_html=True)
-
-    st.text_area(
-        "Puedes revisar el texto antes de traducirlo:",
-        value=text,
-        height=150
+    """,
+    unsafe_allow_html=True
     )
+
+    edited_text = st.text_area(
+        "Text detected:",
+        value=detected_text,
+        height=180,
+        label_visibility="collapsed"
+    )
+
+
+# ============================================================
+# NO TEXTO
+# ============================================================
 
 else:
 
-    st.markdown("""
+    edited_text = ""
+
+    st.markdown(
+    """
     <div class="card">
 
         <div class="card-title">
-            👋 ¡Comencemos!
+            👋 Ready to translate?
         </div>
 
         <div class="card-description">
-            Sube una imagen o activa la cámara para detectar
-            automáticamente el texto.
+            Take a photo or upload an image containing text
+            to get started.
         </div>
 
     </div>
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+    )
 
 
 # ============================================================
-# TRADUCCIÓN
+# TRADUCIR
 # ============================================================
 
-if text.strip():
+if edited_text.strip():
 
-    st.markdown("")
+    st.markdown(
+        '<div class="section-title">🌎 Translation</div>',
+        unsafe_allow_html=True
+    )
 
-    translate_col, empty_col = st.columns([1, 2])
+    translate_column, spacer = st.columns(
+        [1, 2]
+    )
 
-    with translate_col:
+    with translate_column:
 
         translate_button = st.button(
-            "🌎 Traducir y escuchar",
+            "🌎 Translate & Listen",
             use_container_width=True
         )
 
+
     if translate_button:
 
-        with st.spinner("✨ Traduciendo..."):
+        try:
 
-            try:
+            with st.spinner(
+                "✨ Translating..."
+            ):
 
-                result, output_text = text_to_speech(
+                audio_path, translated_text = text_to_speech(
                     input_language,
                     output_language,
-                    text,
+                    edited_text,
                     tld
                 )
 
-                audio_file = open(
-                    f"temp/{result}.mp3",
-                    "rb"
+
+            # ------------------------------------------------
+            # RESULTADO
+            # ------------------------------------------------
+
+            st.markdown(
+            f"""
+            <div class="translation-box">
+
+                <div class="card-title">
+                    💬 Translation
+                </div>
+
+                <div class="card-description">
+                    {output_language_name}
+                </div>
+
+            </div>
+            """,
+            unsafe_allow_html=True
+            )
+
+
+            if display_output_text:
+
+                st.text_area(
+                    "Translated text:",
+                    value=translated_text,
+                    height=150,
+                    label_visibility="collapsed"
                 )
+
+
+            # ------------------------------------------------
+            # AUDIO
+            # ------------------------------------------------
+
+            st.markdown("### 🔊 Listen")
+
+            with open(
+                audio_path,
+                "rb"
+            ) as audio_file:
 
                 audio_bytes = audio_file.read()
 
-                st.markdown("""
-                <div class="result-box">
+            st.audio(
+                audio_bytes,
+                format="audio/mp3"
+            )
 
-                    <div class="result-title">
-                        🔊 Traducción lista
-                    </div>
 
-                </div>
-                """, unsafe_allow_html=True)
+            st.success(
+                "✅ Translation completed successfully!"
+            )
 
-                st.audio(
-                    audio_bytes,
-                    format="audio/mp3"
-                )
 
-                if display_output_text:
+        except Exception as error:
 
-                    st.markdown("### 💬 Texto traducido")
+            st.error(
+                "❌ Something went wrong while translating."
+            )
 
-                    st.success(output_text)
+            st.caption(
+                f"Technical information: {error}"
+            )
 
-            except Exception as e:
 
-                st.error(
-                    f"❌ No fue posible realizar la traducción: {e}"
-                )
+# ============================================================
+# INFORMACIÓN DE IDIOMAS
+# ============================================================
+
+st.markdown("---")
+
+st.markdown(
+    '<div class="section-title">🌍 Supported languages</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+f"""
+<div class="card">
+
+    <div class="card-title">
+        {len(LANGUAGE_NAMES)} languages available
+    </div>
+
+    <div class="card-description">
+        English · Español · Français · Deutsch · Italiano ·
+        Português · Nederlands · Русский · Українська · Polski ·
+        Čeština · Slovenčina · Magyar · Română · Türkçe ·
+        Ελληνικά · Svenska · Dansk · Suomi · Norsk · हिन्दी ·
+        বাংলা · Bahasa Indonesia · Tiếng Việt · ไทย · 한국어 ·
+        日本語 · 简体中文 · 繁體中文 · العربية · עברית
+    </div>
+
+</div>
+""",
+unsafe_allow_html=True
+)
 
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-st.markdown("""
+st.markdown(
+"""
 <div class="footer">
 
-    🌎 EasyTranslate · Traducción sencilla para viajeros y extranjeros
+    🌎 EasyTranslate
+    <br>
+    Simple translation for travelers, students and foreigners.
 
 </div>
-""", unsafe_allow_html=True)
+""",
+unsafe_allow_html=True
+)
