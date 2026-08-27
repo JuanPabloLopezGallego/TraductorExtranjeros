@@ -575,7 +575,9 @@ st.title("🌎 EasyTranslate")
 st.subheader(
     "Traduce el mundo que te rodea"
 )
-
+st.subheader(
+    "Hecho por Juan Pablo López Gallego"
+)
 st.write(
     "📷 Toma una foto o sube una imagen, "
     "detecta el texto, tradúcelo y escucha el resultado."
