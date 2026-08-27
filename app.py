@@ -43,9 +43,11 @@ remove_files(7)
 
 
 
-st.title("Reconocimiento Óptico de Caracteres")
-st.subheader("Elige la fuente de la imágen, esta puede venir de la cámara o cargando un archivo")
+st.title("Traductor internacional para extranjeros")
+st.subheader("Traduciremos tu imagen del idioma al idioma que quieras, puedes cargar un archivo o tomar una foto")
 
+image= Open.Image('personas.png')
+st.image(image,width=900)
 cam_ = st.checkbox("Usar Cámara")
 
 if cam_ :
