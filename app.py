@@ -226,66 +226,158 @@ st.markdown(
     <style>
 
     /* ======================================================
-       FONDO GENERAL
+       TEMA CLARO - EASYTRANSLATE
        ====================================================== */
 
+    :root {
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --text: #172033;
+        --muted: #64748b;
+        --heading: #12376b;
+        --surface: #ffffff;
+        --surface-soft: #f8fafc;
+        --border: #dbe3ef;
+        --border-soft: #e8eef6;
+        --success-bg: #ecfdf3;
+        --success-text: #166534;
+    }
+
+    /* Fondo principal */
     .stApp {
-        background: linear-gradient(
-            135deg,
-            #f5f8ff 0%,
-            #eef4ff 50%,
-            #f9fbff 100%
-        );
+        background: #f4f7fb;
+        color: var(--text);
+    }
+
+    [data-testid="stAppViewContainer"] {
+        background:
+            radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.055), transparent 30%),
+            linear-gradient(180deg, #f8fbff 0%, #f4f7fb 100%);
+    }
+
+    [data-testid="stHeader"] {
+        background: rgba(248, 251, 255, 0.92);
     }
 
     .main {
-        padding-top: 1rem;
+        padding-top: 1.25rem;
     }
 
-    #MainMenu {
-        visibility: hidden;
+    .block-container {
+        max-width: 1250px;
+        padding-top: 2rem;
+        padding-bottom: 3rem;
     }
 
+    #MainMenu,
     footer {
         visibility: hidden;
     }
 
+    /* ======================================================
+       TEXTO GENERAL
+       ====================================================== */
+
+    html, body, [class*="css"] {
+        color: var(--text);
+    }
+
+    p, label, span, div {
+        color: inherit;
+    }
+
+    .stMarkdown,
+    .stText,
+    .stCaption {
+        color: var(--text);
+    }
+
+    .stCaption {
+        color: var(--muted) !important;
+    }
+
+    h1, h2, h3, h4 {
+        color: var(--heading) !important;
+        letter-spacing: -0.02em;
+    }
+
+    h1 {
+        font-weight: 800 !important;
+        font-size: 2.45rem !important;
+    }
+
+    h2 {
+        font-weight: 750 !important;
+    }
+
+    h3 {
+        font-weight: 700 !important;
+    }
 
     /* ======================================================
        SIDEBAR
        ====================================================== */
 
     section[data-testid="stSidebar"] {
-        background-color: #ffffff;
-        border-right: 1px solid #e5eaf2;
+        background: #ffffff;
+        border-right: 1px solid var(--border);
+        box-shadow: 4px 0 18px rgba(15, 23, 42, 0.035);
+    }
+
+    section[data-testid="stSidebar"] > div {
+        background: #ffffff;
     }
 
     section[data-testid="stSidebar"] h1,
     section[data-testid="stSidebar"] h2,
-    section[data-testid="stSidebar"] h3 {
-        color: #173b6c;
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] h4 {
+        color: var(--heading) !important;
     }
 
+    section[data-testid="stSidebar"] label {
+        color: #334155 !important;
+        font-weight: 600;
+    }
 
     /* ======================================================
-       TÍTULOS
+       SELECTBOX / INPUTS
        ====================================================== */
 
-    h1 {
-        color: #173b6c !important;
-        font-weight: 800 !important;
+    div[data-baseweb="select"] > div {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+        color: var(--text) !important;
+        min-height: 44px;
     }
 
-    h2 {
-        color: #173b6c !important;
-        font-weight: 750 !important;
+    div[data-baseweb="select"] [data-baseweb="select"] {
+        color: var(--text) !important;
     }
 
-    h3 {
-        color: #173b6c !important;
-        font-weight: 700 !important;
+    div[data-baseweb="select"] input {
+        color: var(--text) !important;
     }
 
+    textarea,
+    input {
+        background-color: #ffffff !important;
+        color: #172033 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+    }
+
+    textarea::placeholder,
+    input::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    textarea:focus,
+    input:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12) !important;
+    }
 
     /* ======================================================
        BOTONES
@@ -293,72 +385,110 @@ st.markdown(
 
     .stButton > button {
         width: 100%;
-
-        min-height: 48px;
-
-        border-radius: 14px;
-
-        border: none;
-
-        background: linear-gradient(
-            90deg,
-            #2563eb,
-            #3b82f6
-        );
-
-        color: white;
-
+        min-height: 46px;
+        border-radius: 12px;
+        border: 1px solid var(--primary);
+        background: linear-gradient(90deg, #2563eb, #3b82f6);
+        color: #ffffff !important;
         font-weight: 700;
-
         font-size: 15px;
+        box-shadow: 0 5px 14px rgba(37, 99, 235, 0.16);
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
 
-        box-shadow:
-            0 6px 18px rgba(37, 99, 235, 0.20);
-
-        transition: all 0.2s ease;
+    .stButton > button p,
+    .stButton > button span {
+        color: #ffffff !important;
     }
 
     .stButton > button:hover {
-        background: linear-gradient(
-            90deg,
-            #1d4ed8,
-            #2563eb
-        );
-
-        transform: translateY(-2px);
-
-        box-shadow:
-            0 10px 25px rgba(37, 99, 235, 0.28);
+        background: linear-gradient(90deg, #1d4ed8, #2563eb);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.23);
+        border-color: #1d4ed8;
     }
 
+    .stButton > button:focus {
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    }
+
+    /* ======================================================
+       CHECKBOX
+       ====================================================== */
+
+    [data-testid="stCheckbox"] label {
+        color: #334155 !important;
+    }
+
+    [data-testid="stCheckbox"] p {
+        color: #334155 !important;
+    }
 
     /* ======================================================
        UPLOADER
        ====================================================== */
 
     [data-testid="stFileUploader"] {
-        background-color: white;
-        border-radius: 15px;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 0.35rem;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
     }
 
-
-    /* ======================================================
-       TEXT AREA
-       ====================================================== */
-
-    textarea {
-        border-radius: 14px !important;
-    }
-
-
-    /* ======================================================
-       SELECTBOX
-       ====================================================== */
-
-    div[data-baseweb="select"] > div {
+    [data-testid="stFileUploader"] section {
+        background: #f8fafc;
+        border: 1px dashed #b8c5d8;
         border-radius: 12px;
     }
 
+    [data-testid="stFileUploader"] small,
+    [data-testid="stFileUploader"] span {
+        color: #475569 !important;
+    }
+
+    /* ======================================================
+       CÁMARA
+       ====================================================== */
+
+    [data-testid="stCameraInput"] {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 0.35rem;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+    }
+
+    /* ======================================================
+       ALERTAS / MENSAJES
+       ====================================================== */
+
+    div[data-testid="stAlert"] {
+        border-radius: 14px;
+        border: 1px solid var(--border);
+    }
+
+    div[data-testid="stAlert"] p {
+        color: #334155 !important;
+    }
+
+    /* ======================================================
+       TARJETAS DE PASOS
+       ====================================================== */
+
+    [data-testid="column"] div[data-testid="stAlert"] {
+        min-height: 135px;
+    }
+
+    /* ======================================================
+       DIVISORES
+       ====================================================== */
+
+    hr {
+        border: 0;
+        border-top: 1px solid #dfe7f1;
+        margin: 1.6rem 0;
+    }
 
     /* ======================================================
        AUDIO
@@ -366,17 +496,48 @@ st.markdown(
 
     audio {
         width: 100%;
+        border-radius: 10px;
     }
-
 
     /* ======================================================
-       ALERTAS
+       IMÁGENES
        ====================================================== */
 
-    div[data-testid="stAlert"] {
-        border-radius: 14px;
+    [data-testid="stImage"] img {
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
     }
 
+    /* ======================================================
+       RESULTADO DE TRADUCCIÓN
+       ====================================================== */
+
+    div[data-testid="stAlert"][data-baseweb="notification"] {
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+    }
+
+    /* ======================================================
+       SCROLLBAR
+       ====================================================== */
+
+    ::-webkit-scrollbar {
+        width: 9px;
+        height: 9px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #eef2f7;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #c3cfdd;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #aab8c9;
+    }
 
     /* ======================================================
        FOOTER
@@ -384,14 +545,15 @@ st.markdown(
 
     .footer-text {
         text-align: center;
-
-        color: #718096;
-
+        color: #64748b !important;
         font-size: 13px;
-
+        line-height: 1.7;
         padding-top: 25px;
-
         padding-bottom: 10px;
+    }
+
+    .footer-text strong {
+        color: #334155 !important;
     }
 
     </style>
@@ -607,7 +769,8 @@ with st.sidebar:
     input_language_name = st.selectbox(
         "¿En qué idioma está el texto?",
         LANGUAGE_LIST,
-        index=0
+        index=st.session_state.get("input_index", 0),
+        key="input_language_select"
     )
 
     input_language = LANGUAGES[
@@ -628,7 +791,8 @@ with st.sidebar:
     output_language_name = st.selectbox(
         "¿A qué idioma quieres traducir?",
         LANGUAGE_LIST,
-        index=1
+        index=st.session_state.get("output_index", 1),
+        key="output_language_select"
     )
 
     output_language = LANGUAGES[
