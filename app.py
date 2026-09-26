@@ -2,186 +2,1217 @@ import streamlit as st
 import os
 import time
 import glob
-import os
 import cv2
 import numpy as np
 import pytesseract
+
 from PIL import Image
 from gtts import gTTS
 from googletrans import Translator
 
 
-text=" "
+# ============================================================
+# CONFIGURACIÓN DE LA PÁGINA
+# ============================================================
 
-def text_to_speech(input_language, output_language, text, tld):
-    translation = translator.translate(text, src=input_language, dest=output_language)
-    trans_text = translation.text
-    tts = gTTS(trans_text, lang=output_language, tld=tld, slow=False)
-    try:
-        my_file_name = text[0:20]
-    except:
-        my_file_name = "audio"
-    tts.save(f"temp/{my_file_name}.mp3")
-    return my_file_name, trans_text
+st.set_page_config(
+    page_title="EasyTranslate",
+    page_icon="🌎",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 
+# ============================================================
+# CONFIGURACIÓN GENERAL
+# ============================================================
+
+TEMP_FOLDER = "temp"
+
+if not os.path.exists(TEMP_FOLDER):
+    os.makedirs(TEMP_FOLDER)
+
+translator = Translator()
 
 
-def remove_files(n):
-    mp3_files = glob.glob("temp/*mp3")
-    if len(mp3_files) != 0:
-        now = time.time()
-        n_days = n * 86400
-        for f in mp3_files:
-            if os.stat(f).st_mtime < now - n_days:
-                os.remove(f)
-                print("Deleted ", f)
+# ============================================================
+# IDIOMAS
+# ============================================================
+
+LANGUAGES = {
+
+    "🇪🇸 Español": {
+        "translation": "es",
+        "tesseract": "spa"
+    },
+
+    "🇺🇸 English": {
+        "translation": "en",
+        "tesseract": "eng"
+    },
+
+    "🇫🇷 Français": {
+        "translation": "fr",
+        "tesseract": "fra"
+    },
+
+    "🇩🇪 Deutsch": {
+        "translation": "de",
+        "tesseract": "deu"
+    },
+
+    "🇮🇹 Italiano": {
+        "translation": "it",
+        "tesseract": "ita"
+    },
+
+    "🇵🇹 Português": {
+        "translation": "pt",
+        "tesseract": "por"
+    },
+
+    "🇳🇱 Nederlands": {
+        "translation": "nl",
+        "tesseract": "nld"
+    },
+
+    "🇷🇺 Русский": {
+        "translation": "ru",
+        "tesseract": "rus"
+    },
+
+    "🇺🇦 Українська": {
+        "translation": "uk",
+        "tesseract": "ukr"
+    },
+
+    "🇵🇱 Polski": {
+        "translation": "pl",
+        "tesseract": "pol"
+    },
+
+    "🇨🇿 Čeština": {
+        "translation": "cs",
+        "tesseract": "ces"
+    },
+
+    "🇸🇰 Slovenčina": {
+        "translation": "sk",
+        "tesseract": "slk"
+    },
+
+    "🇭🇺 Magyar": {
+        "translation": "hu",
+        "tesseract": "hun"
+    },
+
+    "🇷🇴 Română": {
+        "translation": "ro",
+        "tesseract": "ron"
+    },
+
+    "🇹🇷 Türkçe": {
+        "translation": "tr",
+        "tesseract": "tur"
+    },
+
+    "🇬🇷 Ελληνικά": {
+        "translation": "el",
+        "tesseract": "ell"
+    },
+
+    "🇸🇪 Svenska": {
+        "translation": "sv",
+        "tesseract": "swe"
+    },
+
+    "🇩🇰 Dansk": {
+        "translation": "da",
+        "tesseract": "dan"
+    },
+
+    "🇫🇮 Suomi": {
+        "translation": "fi",
+        "tesseract": "fin"
+    },
+
+    "🇳🇴 Norsk": {
+        "translation": "no",
+        "tesseract": "nor"
+    },
+
+    "🇮🇳 हिन्दी": {
+        "translation": "hi",
+        "tesseract": "hin"
+    },
+
+    "🇧🇩 বাংলা": {
+        "translation": "bn",
+        "tesseract": "ben"
+    },
+
+    "🇮🇩 Bahasa Indonesia": {
+        "translation": "id",
+        "tesseract": "ind"
+    },
+
+    "🇻🇳 Tiếng Việt": {
+        "translation": "vi",
+        "tesseract": "vie"
+    },
+
+    "🇹🇭 ไทย": {
+        "translation": "th",
+        "tesseract": "tha"
+    },
+
+    "🇰🇷 한국어": {
+        "translation": "ko",
+        "tesseract": "kor"
+    },
+
+    "🇯🇵 日本語": {
+        "translation": "ja",
+        "tesseract": "jpn"
+    },
+
+    "🇨🇳 简体中文": {
+        "translation": "zh-cn",
+        "tesseract": "chi_sim"
+    },
+
+    "🇹🇼 繁體中文": {
+        "translation": "zh-tw",
+        "tesseract": "chi_tra"
+    },
+
+    "🇸🇦 العربية": {
+        "translation": "ar",
+        "tesseract": "ara"
+    },
+
+    "🇮🇱 עברית": {
+        "translation": "iw",
+        "tesseract": "heb"
+    }
+}
 
 
-remove_files(7)
-  
+LANGUAGE_LIST = list(LANGUAGES.keys())
 
 
+# ============================================================
+# ACENTOS
+# ============================================================
 
-st.title("Reconocimiento Óptico de Caracteres")
-st.subheader("Elige la fuente de la imágen, esta puede venir de la cámara o cargando un archivo")
+ACCENTS = {
+    "🌎 Predeterminado": "com",
+    "🇺🇸 Estados Unidos": "com",
+    "🇬🇧 Reino Unido": "co.uk",
+    "🇨🇦 Canadá": "ca",
+    "🇦🇺 Australia": "com.au",
+    "🇮🇳 India": "co.in",
+    "🇮🇪 Irlanda": "ie",
+    "🇿🇦 Sudáfrica": "co.za"
+}
 
-cam_ = st.checkbox("Usar Cámara")
 
-if cam_ :
-   img_file_buffer = st.camera_input("Toma una Foto")
-else :
-   img_file_buffer = None
-   
-with st.sidebar:
-      st.subheader("Procesamiento para Cámara")
-      filtro = st.radio("Filtro para imagen con cámara",('Sí', 'No'))
+# ============================================================
+# ESTILOS
+# ============================================================
 
-bg_image = st.file_uploader("Cargar Imagen:", type=["png", "jpg"])
-if bg_image is not None:
-    uploaded_file=bg_image
-    st.image(uploaded_file, caption='Imagen cargada.', use_container_width=True)
-    
-    # Guardar la imagen en el sistema de archivos
-    with open(uploaded_file.name, 'wb') as f:
-        f.write(uploaded_file.read())
-    
-    st.success(f"Imagen guardada como {uploaded_file.name}")
-    img_cv = cv2.imread(f'{uploaded_file.name}')
-    img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
-    text= pytesseract.image_to_string(img_rgb)
-st.write(text)  
-    
-      
-if img_file_buffer is not None:
-    # To read image file buffer with OpenCV:
-    bytes_data = img_file_buffer.getvalue()
-    cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
+st.markdown(
+    """
+    <style>
 
-    
-    if filtro == 'Con Filtro':
-         cv2_img=cv2.bitwise_not(cv2_img)
+    /* ======================================================
+       TEMA CLARO - EASYTRANSLATE
+       ====================================================== */
+
+    :root {
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --text: #172033;
+        --muted: #64748b;
+        --heading: #12376b;
+        --surface: #ffffff;
+        --surface-soft: #f8fafc;
+        --border: #dbe3ef;
+        --border-soft: #e8eef6;
+        --success-bg: #ecfdf3;
+        --success-text: #166534;
+    }
+
+    /* Fondo principal */
+    .stApp {
+        background: #f4f7fb;
+        color: var(--text);
+    }
+
+    [data-testid="stAppViewContainer"] {
+        background:
+            radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.055), transparent 30%),
+            linear-gradient(180deg, #f8fbff 0%, #f4f7fb 100%);
+    }
+
+    [data-testid="stHeader"] {
+        background: rgba(248, 251, 255, 0.92);
+    }
+
+    .main {
+        padding-top: 1.25rem;
+    }
+
+    .block-container {
+        max-width: 1250px;
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+    }
+
+    #MainMenu,
+    footer {
+        visibility: hidden;
+    }
+
+    /* ======================================================
+       TEXTO GENERAL
+       ====================================================== */
+
+    html, body, [class*="css"] {
+        color: var(--text);
+    }
+
+    p, label, span, div {
+        color: inherit;
+    }
+
+    .stMarkdown,
+    .stText,
+    .stCaption {
+        color: var(--text);
+    }
+
+    .stCaption {
+        color: var(--muted) !important;
+    }
+
+    h1, h2, h3, h4 {
+        color: var(--heading) !important;
+        letter-spacing: -0.02em;
+    }
+
+    h1 {
+        font-weight: 800 !important;
+        font-size: 2.45rem !important;
+    }
+
+    h2 {
+        font-weight: 750 !important;
+    }
+
+    h3 {
+        font-weight: 700 !important;
+    }
+
+    /* ======================================================
+       SIDEBAR
+       ====================================================== */
+
+    section[data-testid="stSidebar"] {
+        background: #ffffff;
+        border-right: 1px solid var(--border);
+        box-shadow: 4px 0 18px rgba(15, 23, 42, 0.035);
+    }
+
+    section[data-testid="stSidebar"] > div {
+        background: #ffffff;
+    }
+
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] h4 {
+        color: var(--heading) !important;
+    }
+
+    section[data-testid="stSidebar"] label {
+        color: #334155 !important;
+        font-weight: 600;
+    }
+
+    /* ======================================================
+       SELECTBOX / INPUTS
+       ====================================================== */
+
+    div[data-baseweb="select"] > div {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+        color: var(--text) !important;
+        min-height: 44px;
+    }
+
+    div[data-baseweb="select"] [data-baseweb="select"] {
+        color: var(--text) !important;
+    }
+
+    div[data-baseweb="select"] input {
+        color: var(--text) !important;
+    }
+
+    textarea,
+    input {
+        background-color: #ffffff !important;
+        color: #172033 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+    }
+
+    textarea::placeholder,
+    input::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    textarea:focus,
+    input:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12) !important;
+    }
+
+    /* ======================================================
+       BOTONES
+       ====================================================== */
+
+    .stButton > button {
+        width: 100%;
+        min-height: 46px;
+        border-radius: 12px;
+        border: 1px solid var(--primary);
+        background: linear-gradient(90deg, #2563eb, #3b82f6);
+        color: #ffffff !important;
+        font-weight: 700;
+        font-size: 15px;
+        box-shadow: 0 5px 14px rgba(37, 99, 235, 0.16);
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .stButton > button p,
+    .stButton > button span {
+        color: #ffffff !important;
+    }
+
+    .stButton > button:hover {
+        background: linear-gradient(90deg, #1d4ed8, #2563eb);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.23);
+        border-color: #1d4ed8;
+    }
+
+    .stButton > button:focus {
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    }
+
+    /* ======================================================
+       CHECKBOX
+       ====================================================== */
+
+    [data-testid="stCheckbox"] label {
+        color: #334155 !important;
+    }
+
+    [data-testid="stCheckbox"] p {
+        color: #334155 !important;
+    }
+
+    /* ======================================================
+       UPLOADER
+       ====================================================== */
+
+    [data-testid="stFileUploader"] {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 0.35rem;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+    }
+
+    [data-testid="stFileUploader"] section {
+        background: #f8fafc;
+        border: 1px dashed #b8c5d8;
+        border-radius: 12px;
+    }
+
+    [data-testid="stFileUploader"] small,
+    [data-testid="stFileUploader"] span {
+        color: #475569 !important;
+    }
+
+    /* ======================================================
+       CÁMARA
+       ====================================================== */
+
+    [data-testid="stCameraInput"] {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 0.35rem;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+    }
+
+    /* ======================================================
+       ALERTAS / MENSAJES
+       ====================================================== */
+
+    div[data-testid="stAlert"] {
+        border-radius: 14px;
+        border: 1px solid var(--border);
+    }
+
+    div[data-testid="stAlert"] p {
+        color: #334155 !important;
+    }
+
+    /* ======================================================
+       TARJETAS DE PASOS
+       ====================================================== */
+
+    [data-testid="column"] div[data-testid="stAlert"] {
+        min-height: 135px;
+    }
+
+    /* ======================================================
+       DIVISORES
+       ====================================================== */
+
+    hr {
+        border: 0;
+        border-top: 1px solid #dfe7f1;
+        margin: 1.6rem 0;
+    }
+
+    /* ======================================================
+       AUDIO
+       ====================================================== */
+
+    audio {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    /* ======================================================
+       IMÁGENES
+       ====================================================== */
+
+    [data-testid="stImage"] img {
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
+    }
+
+    /* ======================================================
+       RESULTADO DE TRADUCCIÓN
+       ====================================================== */
+
+    div[data-testid="stAlert"][data-baseweb="notification"] {
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+    }
+
+    /* ======================================================
+       SCROLLBAR
+       ====================================================== */
+
+    ::-webkit-scrollbar {
+        width: 9px;
+        height: 9px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #eef2f7;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #c3cfdd;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #aab8c9;
+    }
+
+    /* ======================================================
+       FOOTER
+       ====================================================== */
+
+    .footer-text {
+        text-align: center;
+        color: #64748b !important;
+        font-size: 13px;
+        line-height: 1.7;
+        padding-top: 25px;
+        padding-bottom: 10px;
+    }
+
+    .footer-text strong {
+        color: #334155 !important;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# ============================================================
+# FUNCIONES
+# ============================================================
+
+def clean_filename(text):
+
+    filename = text[:30].strip()
+
+    if not filename:
+        filename = "translation"
+
+    filename = "".join(
+        character
+        for character in filename
+        if character.isalnum()
+        or character in (" ", "_", "-")
+    )
+
+    filename = filename.replace(" ", "_")
+
+    if not filename:
+        filename = "translation"
+
+    return filename
+
+
+def remove_old_files(days=7):
+
+    files = glob.glob(
+        os.path.join(
+            TEMP_FOLDER,
+            "*.mp3"
+        )
+    )
+
+    current_time = time.time()
+
+    maximum_age = days * 86400
+
+    for file in files:
+
+        try:
+
+            file_time = os.stat(file).st_mtime
+
+            if file_time < current_time - maximum_age:
+                os.remove(file)
+
+        except Exception:
+            pass
+
+
+def extract_text_from_image(
+    image_bytes,
+    tesseract_language,
+    use_filter=False
+):
+
+    image_array = np.frombuffer(
+        image_bytes,
+        dtype=np.uint8
+    )
+
+    image = cv2.imdecode(
+        image_array,
+        cv2.IMREAD_COLOR
+    )
+
+    if image is None:
+        return "", None
+
+    original_image = image.copy()
+
+    if use_filter:
+
+        gray = cv2.cvtColor(
+            image,
+            cv2.COLOR_BGR2GRAY
+        )
+
+        gray = cv2.GaussianBlur(
+            gray,
+            (3, 3),
+            0
+        )
+
+        image = cv2.threshold(
+            gray,
+            0,
+            255,
+            cv2.THRESH_BINARY + cv2.THRESH_OTSU
+        )[1]
+
     else:
-        cv2_img= cv2_img
-          
-        
-    img_rgb = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2RGB)
-    text=pytesseract.image_to_string(img_rgb) 
-    st.write(text) 
+
+        image = cv2.cvtColor(
+            image,
+            cv2.COLOR_BGR2RGB
+        )
+
+    try:
+
+        detected_text = pytesseract.image_to_string(
+            image,
+            lang=tesseract_language
+        )
+
+    except Exception:
+
+        try:
+
+            detected_text = pytesseract.image_to_string(
+                image,
+                lang="eng"
+            )
+
+        except Exception:
+
+            detected_text = ""
+
+    return detected_text.strip(), original_image
+
+
+def translate_and_create_audio(
+    source_language,
+    destination_language,
+    text,
+    tld
+):
+
+    translation = translator.translate(
+        text,
+        src=source_language,
+        dest=destination_language
+    )
+
+    translated_text = translation.text
+
+    filename = clean_filename(
+        translated_text
+    )
+
+    audio_path = os.path.join(
+        TEMP_FOLDER,
+        filename + ".mp3"
+    )
+
+    speech = gTTS(
+        text=translated_text,
+        lang=destination_language,
+        tld=tld,
+        slow=False
+    )
+
+    speech.save(audio_path)
+
+    return audio_path, translated_text
+
+
+# ============================================================
+# LIMPIEZA
+# ============================================================
+
+remove_old_files(7)
+
+
+# ============================================================
+# HEADER PRINCIPAL
+# ============================================================
+
+st.title("🌎 EasyTranslate")
+
+st.subheader(
+    "Traduce el mundo que te rodea"
+)
+st.subheader(
+    "Hecho por Juan Pablo López Gallego"
+)
+st.write(
+    "📷 Toma una foto o sube una imagen, "
+    "detecta el texto, tradúcelo y escucha el resultado."
+)
+
+
+st.divider()
+
+
+# ============================================================
+# SIDEBAR
+# ============================================================
 
 with st.sidebar:
-      st.subheader("Parámetros de traducción")
-      
-      try:
-          os.mkdir("temp")
-      except:
-          pass
-      #st.title("Text to speech")
-      translator = Translator()
-      
-      #text = st.text_input("Enter text")
-      in_lang = st.selectbox(
-          "Seleccione el lenguaje de entrada",
-          ("Ingles", "Español", "Bengali", "koreano", "Mandarin", "Japones"),
-      )
-      if in_lang == "Ingles":
-          input_language = "en"
-      elif in_lang == "Español":
-          input_language = "es"
-      elif in_lang == "Bengali":
-          input_language = "bn"
-      elif in_lang == "koreano":
-          input_language = "ko"
-      elif in_lang == "Mandarin":
-          input_language = "zh-cn"
-      elif in_lang == "Japones":
-          input_language = "ja"
-      
-      out_lang = st.selectbox(
-          "Select your output language",
-          ("Ingles", "Español", "Bengali", "koreano", "Mandarin", "Japones"),
-      )
-      if out_lang == "Ingles":
-          output_language = "en"
-      elif out_lang == "Español":
-          output_language = "es"
-      elif out_lang == "Bengali":
-          output_language = "bn"
-      elif out_lang == "koreano":
-          output_language = "ko"
-      elif out_lang == "Chinese":
-          output_language = "zh-cn"
-      elif out_lang == "Japones":
-          output_language = "ja"
-      
-      english_accent = st.selectbox(
-          "Seleccione el acento",
-          (
-              "Default",
-              "India",
-              "United Kingdom",
-              "United States",
-              "Canada",
-              "Australia",
-              "Ireland",
-              "South Africa",
-          ),
-      )
-      
-      if english_accent == "Default":
-          tld = "com"
-      elif english_accent == "India":
-          tld = "co.in"
-      
-      elif english_accent == "United Kingdom":
-          tld = "co.uk"
-      elif english_accent == "United States":
-          tld = "com"
-      elif english_accent == "Canada":
-          tld = "ca"
-      elif english_accent == "Australia":
-          tld = "com.au"
-      elif english_accent == "Ireland":
-          tld = "ie"
-      elif english_accent == "South Africa":
-          tld = "co.za"
 
-      display_output_text = st.checkbox("Mostrar texto")
+    st.header("⚙️ Configuración")
 
-      if st.button("convert"):
-          result, output_text = text_to_speech(input_language, output_language, text, tld)
-          audio_file = open(f"temp/{result}.mp3", "rb")
-          audio_bytes = audio_file.read()
-          st.markdown(f"## Tu audio:")
-          st.audio(audio_bytes, format="audio/mp3", start_time=0)
-      
-          if display_output_text:
-              st.markdown(f"## Texto de salida:")
-              st.write(f" {output_text}")
+    st.divider()
 
 
+    # --------------------------------------------------------
+    # IDIOMA DE LA IMAGEN
+    # --------------------------------------------------------
+
+    st.subheader("🌐 Idioma de la imagen")
+
+    input_language_name = st.selectbox(
+        "¿En qué idioma está el texto?",
+        LANGUAGE_LIST,
+        index=st.session_state.get("input_index", 0),
+        key="input_language_select"
+    )
+
+    input_language = LANGUAGES[
+        input_language_name
+    ]["translation"]
+
+    tesseract_language = LANGUAGES[
+        input_language_name
+    ]["tesseract"]
 
 
- 
-    
-    
+    # --------------------------------------------------------
+    # IDIOMA DE TRADUCCIÓN
+    # --------------------------------------------------------
+
+    st.subheader("🔄 Idioma de traducción")
+
+    output_language_name = st.selectbox(
+        "¿A qué idioma quieres traducir?",
+        LANGUAGE_LIST,
+        index=st.session_state.get("output_index", 1),
+        key="output_language_select"
+    )
+
+    output_language = LANGUAGES[
+        output_language_name
+    ]["translation"]
+
+
+    # --------------------------------------------------------
+    # INTERCAMBIAR IDIOMAS
+    # --------------------------------------------------------
+
+    if st.button("⇄ Intercambiar idiomas"):
+
+        input_index = LANGUAGE_LIST.index(
+            input_language_name
+        )
+
+        output_index = LANGUAGE_LIST.index(
+            output_language_name
+        )
+
+        st.session_state["input_index"] = output_index
+        st.session_state["output_index"] = input_index
+
+        st.rerun()
+
+
+    # --------------------------------------------------------
+    # ACENTO
+    # --------------------------------------------------------
+
+    st.subheader("🔊 Voz")
+
+    accent_name = st.selectbox(
+        "Selecciona el acento:",
+        list(ACCENTS.keys())
+    )
+
+    tld = ACCENTS[accent_name]
+
+
+    # --------------------------------------------------------
+    # PROCESAMIENTO
+    # --------------------------------------------------------
+
+    st.subheader("✨ Procesamiento de imagen")
+
+    use_filter = st.checkbox(
+        "Mejorar imagen antes de leerla",
+        value=False
+    )
+
+
+    # --------------------------------------------------------
+    # RESULTADO
+    # --------------------------------------------------------
+
+    st.subheader("📄 Resultado")
+
+    show_translation = st.checkbox(
+        "Mostrar texto traducido",
+        value=True
+    )
+
+
+    st.divider()
+
+
+    st.info(
+        "💡 Consejo: utiliza una imagen clara y con "
+        "buena iluminación para obtener mejores resultados."
+    )
+
+
+# ============================================================
+# PASOS
+# ============================================================
+
+st.header("✨ ¿Cómo funciona?")
+
+step1, step2, step3 = st.columns(3)
+
+
+with step1:
+
+    st.info(
+        "📷 **1. Toma una foto**\n\n"
+        "Fotografía un menú, señal, documento o cualquier texto."
+    )
+
+
+with step2:
+
+    st.info(
+        "🔍 **2. Detectamos el texto**\n\n"
+        "La aplicación reconoce automáticamente las palabras."
+    )
+
+
+with step3:
+
+    st.info(
+        "🔊 **3. Escucha la traducción**\n\n"
+        "Traduce el texto y escucha cómo se pronuncia."
+    )
+
+
+st.divider()
+
+
+# ============================================================
+# SELECCIONAR IMAGEN
+# ============================================================
+
+st.header("📸 Selecciona una imagen")
+
+st.write(
+    "Puedes utilizar la cámara o subir una imagen "
+    "que ya tengas en tu dispositivo."
+)
+
+
+camera_column, upload_column = st.columns(2)
+
+
+camera_image = None
+uploaded_image = None
+
+
+# ============================================================
+# CÁMARA
+# ============================================================
+
+with camera_column:
+
+    st.subheader("📷 Cámara")
+
+    use_camera = st.checkbox(
+        "Usar cámara"
+    )
+
+    if use_camera:
+
+        camera_image = st.camera_input(
+            "Toma una foto"
+        )
+
+
+# ============================================================
+# SUBIR IMAGEN
+# ============================================================
+
+with upload_column:
+
+    st.subheader("📁 Subir imagen")
+
+    uploaded_image = st.file_uploader(
+        "Selecciona una imagen",
+        type=[
+            "png",
+            "jpg",
+            "jpeg",
+            "webp"
+        ]
+    )
+
+
+# ============================================================
+# VARIABLES
+# ============================================================
+
+detected_text = ""
+
+image_bytes = None
+
+
+# ============================================================
+# IMAGEN SUBIDA
+# ============================================================
+
+if uploaded_image is not None:
+
+    image_bytes = uploaded_image.getvalue()
+
+    st.divider()
+
+    st.subheader("🖼️ Imagen seleccionada")
+
+    try:
+
+        image = Image.open(
+            uploaded_image
+        )
+
+        st.image(
+            image,
+            use_container_width=True
+        )
+
+    except Exception:
+
+        st.error(
+            "No se ha podido abrir la imagen."
+        )
+
+
+# ============================================================
+# IMAGEN DE CÁMARA
+# ============================================================
+
+elif camera_image is not None:
+
+    image_bytes = camera_image.getvalue()
+
+    st.divider()
+
+    st.subheader("🖼️ Fotografía")
+
+    st.image(
+        image_bytes,
+        use_container_width=True
+    )
+
+
+# ============================================================
+# OCR
+# ============================================================
+
+if image_bytes is not None:
+
+    with st.spinner(
+        "🔍 Analizando la imagen..."
+    ):
+
+        detected_text, original_image = (
+            extract_text_from_image(
+                image_bytes,
+                tesseract_language,
+                use_filter
+            )
+        )
+
+
+# ============================================================
+# TEXTO DETECTADO
+# ============================================================
+
+if detected_text:
+
+    st.divider()
+
+    st.header("📝 Texto detectado")
+
+    st.write(
+        "Revisa el texto antes de traducirlo. "
+        "También puedes modificarlo manualmente."
+    )
+
+    edited_text = st.text_area(
+        "Texto detectado",
+        value=detected_text,
+        height=180,
+        label_visibility="collapsed"
+    )
+
+
+# ============================================================
+# IMAGEN SIN TEXTO
+# ============================================================
+
+elif image_bytes is not None:
+
+    st.warning(
+        "⚠️ No se ha detectado ningún texto. "
+        "Prueba con una imagen más clara o activa "
+        "el procesamiento de imagen."
+    )
+
+    edited_text = ""
+
+
+# ============================================================
+# SIN IMAGEN
+# ============================================================
+
+else:
+
+    edited_text = ""
+
+    st.divider()
+
+    st.info(
+        "👋 **¡Listo para comenzar!**\n\n"
+        "Toma una fotografía o sube una imagen que contenga texto."
+    )
+
+
+# ============================================================
+# TRADUCCIÓN
+# ============================================================
+
+if edited_text.strip():
+
+    st.divider()
+
+    st.header("🌎 Traducción")
+
+    st.write(
+        f"**{input_language_name} → {output_language_name}**"
+    )
+
+    translate_button = st.button(
+        "🌎 Traducir y escuchar"
+    )
+
+
+    if translate_button:
+
+        try:
+
+            with st.spinner(
+                "✨ Traduciendo..."
+            ):
+
+                audio_path, translated_text = (
+                    translate_and_create_audio(
+                        input_language,
+                        output_language,
+                        edited_text,
+                        tld
+                    )
+                )
+
+
+            # ------------------------------------------------
+            # TEXTO TRADUCIDO
+            # ------------------------------------------------
+
+            if show_translation:
+
+                st.subheader(
+                    "💬 Texto traducido"
+                )
+
+                st.success(
+                    translated_text
+                )
+
+
+            # ------------------------------------------------
+            # AUDIO
+            # ------------------------------------------------
+
+            st.subheader(
+                "🔊 Escuchar"
+            )
+
+            with open(
+                audio_path,
+                "rb"
+            ) as audio_file:
+
+                audio_bytes = audio_file.read()
+
+            st.audio(
+                audio_bytes,
+                format="audio/mp3"
+            )
+
+
+            st.success(
+                "✅ ¡Traducción completada!"
+            )
+
+
+        except Exception as error:
+
+            st.error(
+                "❌ Ha ocurrido un problema al realizar "
+                "la traducción."
+            )
+
+            st.caption(
+                f"Información técnica: {error}"
+            )
+
+
+# ============================================================
+# IDIOMAS DISPONIBLES
+# ============================================================
+
+st.divider()
+
+st.header("🌍 Idiomas disponibles")
+
+st.write(
+    f"Actualmente puedes utilizar **{len(LANGUAGE_LIST)} idiomas:**"
+)
+
+
+language_columns = st.columns(4)
+
+
+for index, language in enumerate(LANGUAGE_LIST):
+
+    with language_columns[index % 4]:
+
+        st.write(language)
+
+
+# ============================================================
+# FOOTER
+# ============================================================
+
+st.divider()
+
+st.markdown(
+    "<div class='footer-text'>"
+    "🌎 EasyTranslate<br>"
+    "Hecho por <strong>Juan Pablo López Gallego</strong>"
+    "</div>",
+    unsafe_allow_html=True
+)
