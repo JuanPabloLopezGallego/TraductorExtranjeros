@@ -7,7 +7,7 @@ import numpy as np
 import pytesseract
 
 from PIL import Image
-from gtts import gTTS
+
 from googletrans import Translator
 
 
