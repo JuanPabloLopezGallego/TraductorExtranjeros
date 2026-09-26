@@ -88,29 +88,20 @@ ACCENTS = {
 
 
 # ============================================================
-# ESTILOS MEJORADOS (CSS)
+# ESTILOS CSS REPARADOS (CORRECCIÓN DE CONTRASTE)
 # ============================================================
 
 st.markdown(
     """
     <style>
 
-    :root {
-        --primary: #2563eb;
-        --primary-dark: #1d4ed8;
-        --text: #0f172a;
-        --muted: #64748b;
-        --heading: #1e293b;
-        --border: #e2e8f0;
+    /* Reset global de colores para evitar conflictos con Dark Mode */
+    .stApp, [data-testid="stAppViewContainer"] {
+        background-color: #f8fafc !important;
+        color: #0f172a !important;
     }
 
-    .stApp {
-        background: #f8fafc;
-        color: var(--text);
-    }
-
-    /* Ocultar elementos predeterminados */
-    #MainMenu, footer { visibility: hidden; }
+    #MainMenu, footer, header { visibility: hidden; }
 
     .block-container {
         max-width: 1100px;
@@ -118,16 +109,45 @@ st.markdown(
         padding-bottom: 3rem;
     }
 
-    /* Sidebar elegante */
+    /* BARRA LATERAL (SIDEBAR) - Corrección de contraste */
     section[data-testid="stSidebar"] {
-        background-color: #ffffff;
-        border-right: 1px solid var(--border);
+        background-color: #ffffff !important;
+        border-right: 1px solid #e2e8f0 !important;
     }
 
-    /* Pestañas estilizadas */
+    section[data-testid="stSidebar"] * {
+        color: #0f172a !important;
+    }
+
+    section[data-testid="stSidebar"] h1, 
+    section[data-testid="stSidebar"] h2, 
+    section[data-testid="stSidebar"] h3 {
+        color: #1e293b !important;
+        font-weight: 700 !important;
+    }
+
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] p {
+        color: #334155 !important;
+    }
+
+    /* CAMPOS Y SELECTORES */
+    div[data-baseweb="select"] > div {
+        background-color: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 10px !important;
+    }
+
+    div[data-baseweb="select"] * {
+        color: #0f172a !important;
+        background-color: transparent !important;
+    }
+
+    /* PESTAÑAS (TABS) */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
-        background-color: #e2e8f0;
+        background-color: #e2e8f0 !important;
         padding: 6px;
         border-radius: 12px;
     }
@@ -136,73 +156,91 @@ st.markdown(
         height: 42px;
         border-radius: 8px;
         font-weight: 600;
-        color: #475569;
+        color: #475569 !important;
         border: none !important;
     }
 
     .stTabs [aria-selected="true"] {
         background-color: #ffffff !important;
-        color: var(--primary) !important;
+        color: #2563eb !important;
         box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
 
-    /* Botones principales */
+    /* BOTONES */
     .stButton > button {
         width: 100%;
-        min-height: 48px;
-        border-radius: 12px;
+        min-height: 46px;
+        border-radius: 10px;
         border: none;
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        background: #2563eb !important;
         color: #ffffff !important;
         font-weight: 700;
-        font-size: 16px;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-        transition: all 0.2s ease;
+        font-size: 15px;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+
+    .stButton > button * {
+        color: #ffffff !important;
     }
 
     .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+        background: #1d4ed8 !important;
     }
 
-    /* Tarjeta de título / Hero */
+    /* HERO CARD */
     .hero-container {
         background: #ffffff;
-        padding: 2.5rem 1.5rem;
-        border-radius: 20px;
-        border: 1px solid var(--border);
+        padding: 2.2rem 1.5rem;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
         text-align: center;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.03);
         margin-bottom: 1.5rem;
     }
 
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2.4rem;
         font-weight: 800;
-        color: #1e293b;
-        margin-bottom: 0.25rem;
+        color: #0f172a !important;
+        margin-bottom: 0.2rem;
     }
 
     .hero-subtitle {
-        font-size: 1.15rem;
-        color: #64748b;
+        font-size: 1.1rem;
+        color: #64748b !important;
         margin-bottom: 0.8rem;
     }
 
     .author-badge {
         display: inline-block;
         background: #eff6ff;
-        color: #2563eb;
+        color: #2563eb !important;
         padding: 0.3rem 0.9rem;
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: 600;
     }
 
-    /* Ajuste de contenedores */
+    /* CARGADOR DE ARCHIVOS */
+    [data-testid="stFileUploader"] section {
+        background-color: #ffffff !important;
+        border: 1px dashed #cbd5e1 !important;
+        border-radius: 12px;
+    }
+
+    [data-testid="stFileUploader"] * {
+        color: #334155 !important;
+    }
+
+    /* CONTENEDORES DE PASOS */
     div[data-testid="stVerticalBlockBorderWrapper"] {
-        border-radius: 14px !important;
-        background-color: #ffffff;
+        border-radius: 12px !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    div[data-testid="stVerticalBlockBorderWrapper"] * {
+        color: #0f172a !important;
     }
 
     </style>
@@ -279,7 +317,6 @@ def translate_and_create_audio(source_language, destination_language, text, tld)
     return audio_path, translated_text
 
 
-# Limpieza de archivos antiguos
 remove_old_files(7)
 
 
@@ -304,13 +341,13 @@ st.markdown(
 # ============================================================
 
 with st.sidebar:
-    st.title("⚙️ Configuración")
+    st.subheader("⚙️ Configuración")
     st.write("---")
 
-    st.subheader("🌐 Idiomas")
+    st.markdown("##### 🌐 Idiomas")
     
     input_language_name = st.selectbox(
-        "Idioma del texto en la imagen:",
+        "Idioma de la imagen:",
         LANGUAGE_LIST,
         index=st.session_state.get("input_index", 0),
         key="input_language_select"
@@ -336,22 +373,22 @@ with st.sidebar:
         st.rerun()
 
     st.write("---")
-    st.subheader("🔊 Audio y Voz")
+    st.markdown("##### 🔊 Voz y Acento")
 
-    accent_name = st.selectbox("Selecciona la acentuación:", list(ACCENTS.keys()))
+    accent_name = st.selectbox("Acentuación:", list(ACCENTS.keys()))
     tld = ACCENTS[accent_name]
 
     st.write("---")
-    st.subheader("✨ Opciones adicionales")
+    st.markdown("##### ✨ Procesamiento")
 
-    use_filter = st.checkbox("Mejorar contraste de la imagen (OCR)", value=False)
+    use_filter = st.checkbox("Mejorar contraste imagen", value=False)
     show_translation = st.checkbox("Mostrar texto traducido", value=True)
 
-    st.info("💡 **Consejo:** Para mejores resultados, usa imágenes con texto claro y buena iluminación.")
+    st.info("💡 Usa imágenes con buena iluminación para obtener mejores resultados.")
 
 
 # ============================================================
-# ¿CÓMO FUNCIONA? (TARJETAS MODULARES)
+# PASOS DE USO
 # ============================================================
 
 st.subheader("✨ ¿Cómo funciona?")
@@ -359,24 +396,24 @@ step1, step2, step3 = st.columns(3)
 
 with step1:
     with st.container(border=True):
-        st.markdown("##### 📷 1. Selecciona la imagen")
-        st.caption("Sube un archivo o toma una foto a un menú, cartel o documento.")
+        st.markdown("**📷 1. Selecciona imagen**")
+        st.caption("Sube un archivo o toma una foto directamente.")
 
 with step2:
     with st.container(border=True):
-        st.markdown("##### 🔍 2. Detección automática")
-        st.caption("Reconocemos el texto en la imagen y te dejamos editarlo si lo necesitas.")
+        st.markdown("**🔍 2. Detección OCR**")
+        st.caption("El texto se extrae y puedes corregirlo si lo necesitas.")
 
 with step3:
     with st.container(border=True):
-        st.markdown("##### 🔊 3. Traducción y Audio")
-        st.caption("Obtén el texto traducido al instante y escucha su pronunciación.")
+        st.markdown("**🔊 3. Traducción y Voz**")
+        st.caption("Obtén el texto traducido y escucha su pronunciación.")
 
 st.write("")
 
 
 # ============================================================
-# SELECCIONAR IMAGEN (PESTAÑAS)
+# CARGAR IMAGEN (PESTAÑAS)
 # ============================================================
 
 st.subheader("📸 Captura o sube tu imagen")
@@ -393,7 +430,7 @@ with tab_upload:
     )
     if uploaded_image is not None:
         image_bytes = uploaded_image.getvalue()
-        st.image(image_bytes, use_container_width=True, caption="Imagen cargada")
+        st.image(image_bytes, use_container_width=True, caption="Imagen seleccionada")
 
 with tab_camera:
     camera_image = st.camera_input("Toma una fotografía", label_visibility="collapsed")
@@ -402,13 +439,13 @@ with tab_camera:
 
 
 # ============================================================
-# PROCESAMIENTO OCR Y RESULTADOS
+# PROCESAMIENTO Y TEXTO DETECTADO
 # ============================================================
 
 detected_text = ""
 
 if image_bytes is not None:
-    with st.spinner("🔍 Analizando imagen con OCR..."):
+    with st.spinner("🔍 Leyendo texto de la imagen..."):
         detected_text, _ = extract_text_from_image(
             image_bytes,
             tesseract_language,
@@ -417,7 +454,7 @@ if image_bytes is not None:
 
 if detected_text:
     st.subheader("📝 Texto detectado")
-    st.caption("Puedes corregir el texto detectado a continuación antes de traducirlo:")
+    st.caption("Revisa o modifica el texto antes de traducir:")
     edited_text = st.text_area(
         "Texto a traducir", 
         value=detected_text, 
@@ -426,7 +463,7 @@ if detected_text:
     )
 
 elif image_bytes is not None:
-    st.warning("⚠️ No se pudo reconocer texto en la imagen. Intenta activar la mejora de imagen en la barra lateral o subir una foto más clara.")
+    st.warning("⚠️ No se detectó texto. Intenta activar el filtro de mejora en la barra lateral o usa una imagen más clara.")
     edited_text = ""
 
 else:
@@ -434,17 +471,17 @@ else:
 
 
 # ============================================================
-# TRADUCCIÓN Y AUDIO
+# TRADUCCIÓN
 # ============================================================
 
 if edited_text.strip():
     st.write("---")
-    st.subheader("🌎 Resultado de la traducción")
-    st.write(f"Traducción de **{input_language_name}** a **{output_language_name}**:")
+    st.subheader("🌎 Traducción")
+    st.write(f"Traduciendo de **{input_language_name}** a **{output_language_name}**")
 
-    if st.button("✨ Traducir y Generar Audio"):
+    if st.button("✨ Traducir y Escuchar"):
         try:
-            with st.spinner("Traduciendo y generando voz..."):
+            with st.spinner("Procesando traducción y voz..."):
                 audio_path, translated_text = translate_and_create_audio(
                     input_language,
                     output_language,
@@ -455,21 +492,21 @@ if edited_text.strip():
             if show_translation:
                 st.success(translated_text)
 
-            st.markdown("##### 🔊 Escuchar pronunciación:")
+            st.markdown("##### 🔊 Pronunciación:")
             with open(audio_path, "rb") as audio_file:
                 st.audio(audio_file.read(), format="audio/mp3")
 
         except Exception as error:
-            st.error("❌ Ocurrió un error al procesar la traducción.")
+            st.error("❌ Ocurrió un error con la traducción.")
             st.caption(f"Detalle técnico: {error}")
 
 
 # ============================================================
-# IDIOMAS DISPONIBLES (EXPANDER LIMPIO)
+# IDIOMAS COMPATIBLES
 # ============================================================
 
 st.write("---")
-with st.expander("🌍 Ver los 31 idiomas compatibles"):
+with st.expander("🌍 Idiomas compatibles (31)"):
     lang_cols = st.columns(4)
     for idx, lang in enumerate(LANGUAGE_LIST):
         with lang_cols[idx % 4]:
@@ -482,7 +519,7 @@ with st.expander("🌍 Ver los 31 idiomas compatibles"):
 
 st.markdown(
     """
-    <div style="text-align: center; color: #94a3b8; font-size: 0.85rem; padding-top: 2rem;">
+    <div style="text-align: center; color: #64748b; font-size: 0.85rem; padding-top: 2rem;">
         EasyTranslate &bull; Desarrollado por <strong>Juan Pablo López Gallego</strong>
     </div>
     """,
