@@ -40,163 +40,38 @@ translator = Translator()
 # ============================================================
 
 LANGUAGES = {
-
-    "🇪🇸 Español": {
-        "translation": "es",
-        "tesseract": "spa"
-    },
-
-    "🇺🇸 English": {
-        "translation": "en",
-        "tesseract": "eng"
-    },
-
-    "🇫🇷 Français": {
-        "translation": "fr",
-        "tesseract": "fra"
-    },
-
-    "🇩🇪 Deutsch": {
-        "translation": "de",
-        "tesseract": "deu"
-    },
-
-    "🇮🇹 Italiano": {
-        "translation": "it",
-        "tesseract": "ita"
-    },
-
-    "🇵🇹 Português": {
-        "translation": "pt",
-        "tesseract": "por"
-    },
-
-    "🇳🇱 Nederlands": {
-        "translation": "nl",
-        "tesseract": "nld"
-    },
-
-    "🇷🇺 Русский": {
-        "translation": "ru",
-        "tesseract": "rus"
-    },
-
-    "🇺🇦 Українська": {
-        "translation": "uk",
-        "tesseract": "ukr"
-    },
-
-    "🇵🇱 Polski": {
-        "translation": "pl",
-        "tesseract": "pol"
-    },
-
-    "🇨🇿 Čeština": {
-        "translation": "cs",
-        "tesseract": "ces"
-    },
-
-    "🇸🇰 Slovenčina": {
-        "translation": "sk",
-        "tesseract": "slk"
-    },
-
-    "🇭🇺 Magyar": {
-        "translation": "hu",
-        "tesseract": "hun"
-    },
-
-    "🇷🇴 Română": {
-        "translation": "ro",
-        "tesseract": "ron"
-    },
-
-    "🇹🇷 Türkçe": {
-        "translation": "tr",
-        "tesseract": "tur"
-    },
-
-    "🇬🇷 Ελληνικά": {
-        "translation": "el",
-        "tesseract": "ell"
-    },
-
-    "🇸🇪 Svenska": {
-        "translation": "sv",
-        "tesseract": "swe"
-    },
-
-    "🇩🇰 Dansk": {
-        "translation": "da",
-        "tesseract": "dan"
-    },
-
-    "🇫🇮 Suomi": {
-        "translation": "fi",
-        "tesseract": "fin"
-    },
-
-    "🇳🇴 Norsk": {
-        "translation": "no",
-        "tesseract": "nor"
-    },
-
-    "🇮🇳 हिन्दी": {
-        "translation": "hi",
-        "tesseract": "hin"
-    },
-
-    "🇧🇩 বাংলা": {
-        "translation": "bn",
-        "tesseract": "ben"
-    },
-
-    "🇮🇩 Bahasa Indonesia": {
-        "translation": "id",
-        "tesseract": "ind"
-    },
-
-    "🇻🇳 Tiếng Việt": {
-        "translation": "vi",
-        "tesseract": "vie"
-    },
-
-    "🇹🇭 ไทย": {
-        "translation": "th",
-        "tesseract": "tha"
-    },
-
-    "🇰🇷 한국어": {
-        "translation": "ko",
-        "tesseract": "kor"
-    },
-
-    "🇯🇵 日本語": {
-        "translation": "ja",
-        "tesseract": "jpn"
-    },
-
-    "🇨🇳 简体中文": {
-        "translation": "zh-cn",
-        "tesseract": "chi_sim"
-    },
-
-    "🇹🇼 繁體中文": {
-        "translation": "zh-tw",
-        "tesseract": "chi_tra"
-    },
-
-    "🇸🇦 العربية": {
-        "translation": "ar",
-        "tesseract": "ara"
-    },
-
-    "🇮🇱 עברית": {
-        "translation": "iw",
-        "tesseract": "heb"
-    }
+    "🇪🇸 Español": {"translation": "es", "tesseract": "spa"},
+    "🇺🇸 English": {"translation": "en", "tesseract": "eng"},
+    "🇫🇷 Français": {"translation": "fr", "tesseract": "fra"},
+    "🇩🇪 Deutsch": {"translation": "de", "tesseract": "deu"},
+    "🇮🇹 Italiano": {"translation": "it", "tesseract": "ita"},
+    "🇵🇹 Português": {"translation": "pt", "tesseract": "por"},
+    "🇳🇱 Nederlands": {"translation": "nl", "tesseract": "nld"},
+    "🇷🇺 Русский": {"translation": "ru", "tesseract": "rus"},
+    "🇺🇦 Українська": {"translation": "uk", "tesseract": "ukr"},
+    "🇵🇱 Polski": {"translation": "pl", "tesseract": "pol"},
+    "🇨🇿 Čeština": {"translation": "cs", "tesseract": "ces"},
+    "🇸🇰 Slovenčina": {"translation": "sk", "tesseract": "slk"},
+    "🇭🇺 Magyar": {"translation": "hu", "tesseract": "hun"},
+    "🇷🇴 Română": {"translation": "ro", "tesseract": "ron"},
+    "🇹🇷 Türkçe": {"translation": "tr", "tesseract": "tur"},
+    "🇬🇷 Ελληνικά": {"translation": "el", "tesseract": "ell"},
+    "🇸🇪 Svenska": {"translation": "sv", "tesseract": "swe"},
+    "🇩🇰 Dansk": {"translation": "da", "tesseract": "dan"},
+    "🇫🇮 Suomi": {"translation": "fi", "tesseract": "fin"},
+    "🇳🇴 Norsk": {"translation": "no", "tesseract": "nor"},
+    "🇮🇳 हिन्दी": {"translation": "hi", "tesseract": "hin"},
+    "🇧🇩 বাংলা": {"translation": "bn", "tesseract": "ben"},
+    "🇮🇩 Bahasa Indonesia": {"translation": "id", "tesseract": "ind"},
+    "🇻🇳 Tiếng Việt": {"translation": "vi", "tesseract": "vie"},
+    "🇹🇭 ไทย": {"translation": "th", "tesseract": "tha"},
+    "🇰🇷 한국어": {"translation": "ko", "tesseract": "kor"},
+    "🇯🇵 日本語": {"translation": "ja", "tesseract": "jpn"},
+    "🇨🇳 简体中文": {"translation": "zh-cn", "tesseract": "chi_sim"},
+    "🇹🇼 繁體中文": {"translation": "zh-tw", "tesseract": "chi_tra"},
+    "🇸🇦 العربية": {"translation": "ar", "tesseract": "ara"},
+    "🇮🇱 עברית": {"translation": "iw", "tesseract": "heb"}
 }
-
 
 LANGUAGE_LIST = list(LANGUAGES.keys())
 
@@ -218,342 +93,170 @@ ACCENTS = {
 
 
 # ============================================================
-# ESTILOS
+# ESTILOS CSS AVANZADOS
 # ============================================================
 
 st.markdown(
     """
     <style>
 
-    /* ======================================================
-       TEMA CLARO - EASYTRANSLATE
-       ====================================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
     :root {
         --primary: #2563eb;
-        --primary-dark: #1d4ed8;
-        --text: #172033;
+        --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        --text: #0f172a;
         --muted: #64748b;
-        --heading: #12376b;
-        --surface: #ffffff;
-        --surface-soft: #f8fafc;
-        --border: #dbe3ef;
-        --border-soft: #e8eef6;
-        --success-bg: #ecfdf3;
-        --success-text: #166534;
+        --bg-main: #f8fafc;
+        --card-bg: #ffffff;
+        --border: #e2e8f0;
     }
 
-    /* Fondo principal */
+    /* Fondo de la app */
     .stApp {
-        background: #f4f7fb;
-        color: var(--text);
+        background-color: var(--bg-main);
+        font-family: 'Inter', sans-serif;
     }
 
-    [data-testid="stAppViewContainer"] {
-        background:
-            radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.055), transparent 30%),
-            linear-gradient(180deg, #f8fbff 0%, #f4f7fb 100%);
-    }
+    /* Ocultar elementos por defecto de Streamlit */
+    #MainMenu, footer { visibility: hidden; }
 
-    [data-testid="stHeader"] {
-        background: rgba(248, 251, 255, 0.92);
-    }
-
-    .main {
-        padding-top: 1.25rem;
-    }
-
+    /* Ajuste de contenedor */
     .block-container {
-        max-width: 1250px;
+        max-width: 1100px;
         padding-top: 2rem;
         padding-bottom: 3rem;
     }
 
-    #MainMenu,
-    footer {
-        visibility: hidden;
-    }
-
-    /* ======================================================
-       TEXTO GENERAL
-       ====================================================== */
-
-    html, body, [class*="css"] {
-        color: var(--text);
-    }
-
-    p, label, span, div {
-        color: inherit;
-    }
-
-    .stMarkdown,
-    .stText,
-    .stCaption {
-        color: var(--text);
-    }
-
-    .stCaption {
-        color: var(--muted) !important;
-    }
-
-    h1, h2, h3, h4 {
-        color: var(--heading) !important;
-        letter-spacing: -0.02em;
-    }
-
-    h1 {
-        font-weight: 800 !important;
-        font-size: 2.45rem !important;
-    }
-
-    h2 {
-        font-weight: 750 !important;
-    }
-
-    h3 {
-        font-weight: 700 !important;
-    }
-
-    /* ======================================================
-       SIDEBAR
-       ====================================================== */
-
-    section[data-testid="stSidebar"] {
+    /* Hero Banner */
+    .hero-container {
         background: #ffffff;
-        border-right: 1px solid var(--border);
-        box-shadow: 4px 0 18px rgba(15, 23, 42, 0.035);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03);
+        margin-bottom: 2rem;
     }
 
-    section[data-testid="stSidebar"] > div {
-        background: #ffffff;
+    .hero-title {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 0.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
     }
 
-    section[data-testid="stSidebar"] h1,
-    section[data-testid="stSidebar"] h2,
-    section[data-testid="stSidebar"] h3,
-    section[data-testid="stSidebar"] h4 {
-        color: var(--heading) !important;
+    .hero-subtitle {
+        font-size: 1.15rem;
+        color: var(--muted);
+        font-weight: 500;
+        margin-bottom: 1rem;
     }
 
-    section[data-testid="stSidebar"] label {
-        color: #334155 !important;
+    .author-badge {
+        display: inline-block;
+        background: #eff6ff;
+        color: #1d4ed8;
+        padding: 0.35rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
         font-weight: 600;
+        border: 1px solid #bfdbfe;
     }
 
-    /* ======================================================
-       SELECTBOX / INPUTS
-       ====================================================== */
-
-    div[data-baseweb="select"] > div {
-        background: #ffffff !important;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 12px !important;
-        color: var(--text) !important;
-        min-height: 44px;
+    /* Tarjetas de "Cómo funciona" */
+    .step-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        height: 100%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    div[data-baseweb="select"] [data-baseweb="select"] {
-        color: var(--text) !important;
+    .step-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08);
+        border-color: #cbd5e1;
     }
 
-    div[data-baseweb="select"] input {
-        color: var(--text) !important;
+    .step-icon {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
     }
 
-    textarea,
-    input {
-        background-color: #ffffff !important;
-        color: #172033 !important;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 12px !important;
-    }
-
-    textarea::placeholder,
-    input::placeholder {
-        color: #94a3b8 !important;
-    }
-
-    textarea:focus,
-    input:focus {
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12) !important;
-    }
-
-    /* ======================================================
-       BOTONES
-       ====================================================== */
-
-    .stButton > button {
-        width: 100%;
-        min-height: 46px;
-        border-radius: 12px;
-        border: 1px solid var(--primary);
-        background: linear-gradient(90deg, #2563eb, #3b82f6);
-        color: #ffffff !important;
+    .step-title {
         font-weight: 700;
-        font-size: 15px;
-        box-shadow: 0 5px 14px rgba(37, 99, 235, 0.16);
-        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        color: #1e293b;
+        font-size: 1.05rem;
+        margin-bottom: 0.3rem;
     }
 
-    .stButton > button p,
-    .stButton > button span {
-        color: #ffffff !important;
+    .step-desc {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    /* Estilos de Sidebar */
+    section[data-testid="stSidebar"] {
+        background-color: #ffffff;
+        border-right: 1px solid var(--border);
+    }
+
+    /* Botones primarios */
+    .stButton > button {
+        border-radius: 12px;
+        background: var(--primary-gradient);
+        color: white !important;
+        font-weight: 600;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        transition: all 0.2s ease;
     }
 
     .stButton > button:hover {
-        background: linear-gradient(90deg, #1d4ed8, #2563eb);
+        opacity: 0.95;
         transform: translateY(-1px);
-        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.23);
-        border-color: #1d4ed8;
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
     }
 
-    .stButton > button:focus {
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
-    }
-
-    /* ======================================================
-       CHECKBOX
-       ====================================================== */
-
-    [data-testid="stCheckbox"] label {
-        color: #334155 !important;
-    }
-
-    [data-testid="stCheckbox"] p {
-        color: #334155 !important;
-    }
-
-    /* ======================================================
-       UPLOADER
-       ====================================================== */
-
-    [data-testid="stFileUploader"] {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 0.35rem;
-        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
-    }
-
-    [data-testid="stFileUploader"] section {
-        background: #f8fafc;
-        border: 1px dashed #b8c5d8;
+    /* Pestañas estilizadas */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: #f1f5f9;
+        padding: 6px;
         border-radius: 12px;
     }
 
-    [data-testid="stFileUploader"] small,
-    [data-testid="stFileUploader"] span {
-        color: #475569 !important;
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-weight: 600;
+        color: var(--muted);
+        border: none !important;
     }
 
-    /* ======================================================
-       CÁMARA
-       ====================================================== */
-
-    [data-testid="stCameraInput"] {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 0.35rem;
-        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+    .stTabs [aria-selected="true"] {
+        background-color: #ffffff !important;
+        color: var(--primary) !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
 
-    /* ======================================================
-       ALERTAS / MENSAJES
-       ====================================================== */
-
-    div[data-testid="stAlert"] {
-        border-radius: 14px;
-        border: 1px solid var(--border);
-    }
-
-    div[data-testid="stAlert"] p {
-        color: #334155 !important;
-    }
-
-    /* ======================================================
-       TARJETAS DE PASOS
-       ====================================================== */
-
-    [data-testid="column"] div[data-testid="stAlert"] {
-        min-height: 135px;
-    }
-
-    /* ======================================================
-       DIVISORES
-       ====================================================== */
-
-    hr {
-        border: 0;
-        border-top: 1px solid #dfe7f1;
-        margin: 1.6rem 0;
-    }
-
-    /* ======================================================
-       AUDIO
-       ====================================================== */
-
-    audio {
-        width: 100%;
-        border-radius: 10px;
-    }
-
-    /* ======================================================
-       IMÁGENES
-       ====================================================== */
-
-    [data-testid="stImage"] img {
-        border-radius: 16px;
-        border: 1px solid var(--border);
-        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
-    }
-
-    /* ======================================================
-       RESULTADO DE TRADUCCIÓN
-       ====================================================== */
-
-    div[data-testid="stAlert"][data-baseweb="notification"] {
-        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
-    }
-
-    /* ======================================================
-       SCROLLBAR
-       ====================================================== */
-
-    ::-webkit-scrollbar {
-        width: 9px;
-        height: 9px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #eef2f7;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #c3cfdd;
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: #aab8c9;
-    }
-
-    /* ======================================================
-       FOOTER
-       ====================================================== */
-
+    /* Footer */
     .footer-text {
         text-align: center;
-        color: #64748b !important;
-        font-size: 13px;
-        line-height: 1.7;
-        padding-top: 25px;
-        padding-bottom: 10px;
-    }
-
-    .footer-text strong {
-        color: #334155 !important;
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-top: 2rem;
+        padding-top: 1rem;
     }
 
     </style>
@@ -567,68 +270,32 @@ st.markdown(
 # ============================================================
 
 def clean_filename(text):
-
     filename = text[:30].strip()
-
     if not filename:
         filename = "translation"
-
     filename = "".join(
-        character
-        for character in filename
-        if character.isalnum()
-        or character in (" ", "_", "-")
+        character for character in filename
+        if character.isalnum() or character in (" ", "_", "-")
     )
-
     filename = filename.replace(" ", "_")
-
-    if not filename:
-        filename = "translation"
-
-    return filename
+    return filename if filename else "translation"
 
 
 def remove_old_files(days=7):
-
-    files = glob.glob(
-        os.path.join(
-            TEMP_FOLDER,
-            "*.mp3"
-        )
-    )
-
+    files = glob.glob(os.path.join(TEMP_FOLDER, "*.mp3"))
     current_time = time.time()
-
     maximum_age = days * 86400
-
     for file in files:
-
         try:
-
-            file_time = os.stat(file).st_mtime
-
-            if file_time < current_time - maximum_age:
+            if os.stat(file).st_mtime < current_time - maximum_age:
                 os.remove(file)
-
         except Exception:
             pass
 
 
-def extract_text_from_image(
-    image_bytes,
-    tesseract_language,
-    use_filter=False
-):
-
-    image_array = np.frombuffer(
-        image_bytes,
-        dtype=np.uint8
-    )
-
-    image = cv2.imdecode(
-        image_array,
-        cv2.IMREAD_COLOR
-    )
+def extract_text_from_image(image_bytes, tesseract_language, use_filter=False):
+    image_array = np.frombuffer(image_bytes, dtype=np.uint8)
+    image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
 
     if image is None:
         return "", None
@@ -636,117 +303,56 @@ def extract_text_from_image(
     original_image = image.copy()
 
     if use_filter:
-
-        gray = cv2.cvtColor(
-            image,
-            cv2.COLOR_BGR2GRAY
-        )
-
-        gray = cv2.GaussianBlur(
-            gray,
-            (3, 3),
-            0
-        )
-
-        image = cv2.threshold(
-            gray,
-            0,
-            255,
-            cv2.THRESH_BINARY + cv2.THRESH_OTSU
-        )[1]
-
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        gray = cv2.GaussianBlur(gray, (3, 3), 0)
+        image = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     else:
-
-        image = cv2.cvtColor(
-            image,
-            cv2.COLOR_BGR2RGB
-        )
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     try:
-
-        detected_text = pytesseract.image_to_string(
-            image,
-            lang=tesseract_language
-        )
-
+        detected_text = pytesseract.image_to_string(image, lang=tesseract_language)
     except Exception:
-
         try:
-
-            detected_text = pytesseract.image_to_string(
-                image,
-                lang="eng"
-            )
-
+            detected_text = pytesseract.image_to_string(image, lang="eng")
         except Exception:
-
             detected_text = ""
 
     return detected_text.strip(), original_image
 
 
-def translate_and_create_audio(
-    source_language,
-    destination_language,
-    text,
-    tld
-):
-
-    translation = translator.translate(
-        text,
-        src=source_language,
-        dest=destination_language
-    )
-
+def translate_and_create_audio(source_language, destination_language, text, tld):
+    translation = translator.translate(text, src=source_language, dest=destination_language)
     translated_text = translation.text
+    filename = clean_filename(translated_text)
+    audio_path = os.path.join(TEMP_FOLDER, filename + ".mp3")
 
-    filename = clean_filename(
-        translated_text
-    )
-
-    audio_path = os.path.join(
-        TEMP_FOLDER,
-        filename + ".mp3"
-    )
-
-    speech = gTTS(
-        text=translated_text,
-        lang=destination_language,
-        tld=tld,
-        slow=False
-    )
-
+    speech = gTTS(text=translated_text, lang=destination_language, tld=tld, slow=False)
     speech.save(audio_path)
 
     return audio_path, translated_text
 
 
 # ============================================================
-# LIMPIEZA
+# LIMPIEZA INICIAL
 # ============================================================
 
 remove_old_files(7)
 
 
 # ============================================================
-# HEADER PRINCIPAL
+# HEADER PRINCIPAL (HERO SECTION)
 # ============================================================
 
-st.title("🌎 EasyTranslate")
-
-st.subheader(
-    "Traduce el mundo que te rodea"
+st.markdown(
+    """
+    <div class="hero-container">
+        <div class="hero-title">🌎 EasyTranslate</div>
+        <div class="hero-subtitle">Traduce al instante el texto contenido en tus imágenes y escúchalo</div>
+        <div class="author-badge">Desarrollado por Juan Pablo López Gallego</div>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
-st.subheader(
-    "Hecho por Juan Pablo López Gallego"
-)
-st.write(
-    "📷 Toma una foto o sube una imagen, "
-    "detecta el texto, tradúcelo y escucha el resultado."
-)
-
-
-st.divider()
 
 
 # ============================================================
@@ -754,465 +360,219 @@ st.divider()
 # ============================================================
 
 with st.sidebar:
-
-    st.header("⚙️ Configuración")
-
-    st.divider()
-
-
-    # --------------------------------------------------------
-    # IDIOMA DE LA IMAGEN
-    # --------------------------------------------------------
-
-    st.subheader("🌐 Idioma de la imagen")
-
+    st.title("⚙️ Configuración")
+    
+    st.markdown("### 🌐 Idiomas")
+    
     input_language_name = st.selectbox(
-        "¿En qué idioma está el texto?",
+        "Idioma origen (imagen):",
         LANGUAGE_LIST,
         index=st.session_state.get("input_index", 0),
         key="input_language_select"
     )
 
-    input_language = LANGUAGES[
-        input_language_name
-    ]["translation"]
-
-    tesseract_language = LANGUAGES[
-        input_language_name
-    ]["tesseract"]
-
-
-    # --------------------------------------------------------
-    # IDIOMA DE TRADUCCIÓN
-    # --------------------------------------------------------
-
-    st.subheader("🔄 Idioma de traducción")
-
     output_language_name = st.selectbox(
-        "¿A qué idioma quieres traducir?",
+        "Idioma destino (traducción):",
         LANGUAGE_LIST,
         index=st.session_state.get("output_index", 1),
         key="output_language_select"
     )
 
-    output_language = LANGUAGES[
-        output_language_name
-    ]["translation"]
-
-
-    # --------------------------------------------------------
-    # INTERCAMBIAR IDIOMAS
-    # --------------------------------------------------------
-
-    if st.button("⇄ Intercambiar idiomas"):
-
-        input_index = LANGUAGE_LIST.index(
-            input_language_name
-        )
-
-        output_index = LANGUAGE_LIST.index(
-            output_language_name
-        )
-
+    if st.button("⇄ Intercambiar idiomas", use_container_width=True):
+        input_index = LANGUAGE_LIST.index(input_language_name)
+        output_index = LANGUAGE_LIST.index(output_language_name)
         st.session_state["input_index"] = output_index
         st.session_state["output_index"] = input_index
-
         st.rerun()
 
+    input_language = LANGUAGES[input_language_name]["translation"]
+    tesseract_language = LANGUAGES[input_language_name]["tesseract"]
+    output_language = LANGUAGES[output_language_name]["translation"]
 
-    # --------------------------------------------------------
-    # ACENTO
-    # --------------------------------------------------------
+    st.markdown("---")
+    st.markdown("### 🎙️ Voz & Opciones")
 
-    st.subheader("🔊 Voz")
-
-    accent_name = st.selectbox(
-        "Selecciona el acento:",
-        list(ACCENTS.keys())
-    )
-
+    accent_name = st.selectbox("Acento de audio:", list(ACCENTS.keys()))
     tld = ACCENTS[accent_name]
 
+    use_filter = st.checkbox("Mejorar contraste de imagen (OCR)", value=False)
+    show_translation = st.checkbox("Mostrar bloque de traducción", value=True)
 
-    # --------------------------------------------------------
-    # PROCESAMIENTO
-    # --------------------------------------------------------
-
-    st.subheader("✨ Procesamiento de imagen")
-
-    use_filter = st.checkbox(
-        "Mejorar imagen antes de leerla",
-        value=False
-    )
-
-
-    # --------------------------------------------------------
-    # RESULTADO
-    # --------------------------------------------------------
-
-    st.subheader("📄 Resultado")
-
-    show_translation = st.checkbox(
-        "Mostrar texto traducido",
-        value=True
-    )
-
-
-    st.divider()
-
-
-    st.info(
-        "💡 Consejo: utiliza una imagen clara y con "
-        "buena iluminación para obtener mejores resultados."
-    )
+    st.markdown("---")
+    st.caption("💡 **Consejo:** Para un mejor reconocimiento, asegúrate de que la imagen tenga buena iluminación y un texto claro.")
 
 
 # ============================================================
-# PASOS
+# CÓMO FUNCIONA
 # ============================================================
 
-st.header("✨ ¿Cómo funciona?")
+st.markdown("### ✨ ¿Cómo funciona?")
 
-step1, step2, step3 = st.columns(3)
+col1, col2, col3 = st.columns(3)
 
-
-with step1:
-
-    st.info(
-        "📷 **1. Toma una foto**\n\n"
-        "Fotografía un menú, señal, documento o cualquier texto."
+with col1:
+    st.markdown(
+        """
+        <div class="step-card">
+            <div class="step-icon">📸</div>
+            <div class="step-title">1. Carga una imagen</div>
+            <div class="step-desc">Toma una foto en tiempo real o sube una imagen desde tu dispositivo.</div>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-
-with step2:
-
-    st.info(
-        "🔍 **2. Detectamos el texto**\n\n"
-        "La aplicación reconoce automáticamente las palabras."
+with col2:
+    st.markdown(
+        """
+        <div class="step-card">
+            <div class="step-icon">🔍</div>
+            <div class="step-title">2. Detección automática</div>
+            <div class="step-desc">Extraemos el texto mediante reconocimiento óptico de caracteres (OCR).</div>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-
-with step3:
-
-    st.info(
-        "🔊 **3. Escucha la traducción**\n\n"
-        "Traduce el texto y escucha cómo se pronuncia."
+with col3:
+    st.markdown(
+        """
+        <div class="step-card">
+            <div class="step-icon">🔊</div>
+            <div class="step-title">3. Traduce y escucha</div>
+            <div class="step-desc">Obtén la traducción inmediata y escucha su pronunciación correcta.</div>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
-
-st.divider()
+st.write("")
+st.write("")
 
 
 # ============================================================
-# SELECCIONAR IMAGEN
+# SELECCIÓN DE IMAGEN (PESTAÑAS)
 # ============================================================
 
-st.header("📸 Selecciona una imagen")
+st.markdown("### 📸 Captura o selecciona una imagen")
 
-st.write(
-    "Puedes utilizar la cámara o subir una imagen "
-    "que ya tengas en tu dispositivo."
-)
+tab_upload, tab_camera = st.tabs(["📁 Subir archivo", "📷 Usar Cámara"])
 
-
-camera_column, upload_column = st.columns(2)
-
-
-camera_image = None
 uploaded_image = None
+camera_image = None
 
-
-# ============================================================
-# CÁMARA
-# ============================================================
-
-with camera_column:
-
-    st.subheader("📷 Cámara")
-
-    use_camera = st.checkbox(
-        "Usar cámara"
-    )
-
-    if use_camera:
-
-        camera_image = st.camera_input(
-            "Toma una foto"
-        )
-
-
-# ============================================================
-# SUBIR IMAGEN
-# ============================================================
-
-with upload_column:
-
-    st.subheader("📁 Subir imagen")
-
+with tab_upload:
     uploaded_image = st.file_uploader(
-        "Selecciona una imagen",
-        type=[
-            "png",
-            "jpg",
-            "jpeg",
-            "webp"
-        ]
+        "Arrastra o selecciona una imagen",
+        type=["png", "jpg", "jpeg", "webp"],
+        label_visibility="collapsed"
     )
 
-
-# ============================================================
-# VARIABLES
-# ============================================================
-
-detected_text = ""
-
-image_bytes = None
-
-
-# ============================================================
-# IMAGEN SUBIDA
-# ============================================================
-
-if uploaded_image is not None:
-
-    image_bytes = uploaded_image.getvalue()
-
-    st.divider()
-
-    st.subheader("🖼️ Imagen seleccionada")
-
-    try:
-
-        image = Image.open(
-            uploaded_image
-        )
-
-        st.image(
-            image,
-            use_container_width=True
-        )
-
-    except Exception:
-
-        st.error(
-            "No se ha podido abrir la imagen."
-        )
-
-
-# ============================================================
-# IMAGEN DE CÁMARA
-# ============================================================
-
-elif camera_image is not None:
-
-    image_bytes = camera_image.getvalue()
-
-    st.divider()
-
-    st.subheader("🖼️ Fotografía")
-
-    st.image(
-        image_bytes,
-        use_container_width=True
-    )
-
-
-# ============================================================
-# OCR
-# ============================================================
-
-if image_bytes is not None:
-
-    with st.spinner(
-        "🔍 Analizando la imagen..."
-    ):
-
-        detected_text, original_image = (
-            extract_text_from_image(
-                image_bytes,
-                tesseract_language,
-                use_filter
-            )
-        )
-
-
-# ============================================================
-# TEXTO DETECTADO
-# ============================================================
-
-if detected_text:
-
-    st.divider()
-
-    st.header("📝 Texto detectado")
-
-    st.write(
-        "Revisa el texto antes de traducirlo. "
-        "También puedes modificarlo manualmente."
-    )
-
-    edited_text = st.text_area(
-        "Texto detectado",
-        value=detected_text,
-        height=180,
+with tab_camera:
+    camera_image = st.camera_input(
+        "Toma una fotografía",
         label_visibility="collapsed"
     )
 
 
 # ============================================================
-# IMAGEN SIN TEXTO
+# PROCESAMIENTO Y RESULTADOS
 # ============================================================
 
-elif image_bytes is not None:
+image_bytes = None
 
-    st.warning(
-        "⚠️ No se ha detectado ningún texto. "
-        "Prueba con una imagen más clara o activa "
-        "el procesamiento de imagen."
-    )
+if uploaded_image is not None:
+    image_bytes = uploaded_image.getvalue()
+elif camera_image is not None:
+    image_bytes = camera_image.getvalue()
 
-    edited_text = ""
+detected_text = ""
 
+if image_bytes is not None:
+    col_img, col_txt = st.columns([1, 1], gap="medium")
+    
+    with col_img:
+        st.markdown("#### 🖼️ Vista previa")
+        st.image(image_bytes, use_container_width=True)
 
-# ============================================================
-# SIN IMAGEN
-# ============================================================
+    with st.spinner("🔍 Reconociendo texto en la imagen..."):
+        detected_text, _ = extract_text_from_image(
+            image_bytes,
+            tesseract_language,
+            use_filter
+        )
 
+    with col_txt:
+        st.markdown("#### 📝 Texto detectado")
+        if detected_text:
+            edited_text = st.text_area(
+                "Puedes corregir el texto si es necesario:",
+                value=detected_text,
+                height=180
+            )
+        else:
+            st.warning("⚠️ No se detectó texto en la imagen. Prueba activando 'Mejorar contraste' en el panel lateral o usa otra imagen.")
+            edited_text = ""
 else:
-
     edited_text = ""
-
-    st.divider()
-
-    st.info(
-        "👋 **¡Listo para comenzar!**\n\n"
-        "Toma una fotografía o sube una imagen que contenga texto."
-    )
 
 
 # ============================================================
-# TRADUCCIÓN
+# TRADUCCIÓN Y AUDIO
 # ============================================================
 
 if edited_text.strip():
+    st.markdown("---")
+    st.markdown(f"### 🌎 Traducción (`{input_language_name}` → `{output_language_name}`)")
 
-    st.divider()
-
-    st.header("🌎 Traducción")
-
-    st.write(
-        f"**{input_language_name} → {output_language_name}**"
-    )
-
-    translate_button = st.button(
-        "🌎 Traducir y escuchar"
-    )
-
-
-    if translate_button:
-
+    if st.button("✨ Traducir y Generar Audio", use_container_width=True):
         try:
-
-            with st.spinner(
-                "✨ Traduciendo..."
-            ):
-
-                audio_path, translated_text = (
-                    translate_and_create_audio(
-                        input_language,
-                        output_language,
-                        edited_text,
-                        tld
-                    )
+            with st.spinner("Traduciendo y generando voz..."):
+                audio_path, translated_text = translate_and_create_audio(
+                    input_language,
+                    output_language,
+                    edited_text,
+                    tld
                 )
 
+            res_col1, res_col2 = st.columns([2, 1], gap="medium")
 
-            # ------------------------------------------------
-            # TEXTO TRADUCIDO
-            # ------------------------------------------------
+            with res_col1:
+                if show_translation:
+                    st.success(translated_text)
 
-            if show_translation:
-
-                st.subheader(
-                    "💬 Texto traducido"
-                )
-
-                st.success(
-                    translated_text
-                )
-
-
-            # ------------------------------------------------
-            # AUDIO
-            # ------------------------------------------------
-
-            st.subheader(
-                "🔊 Escuchar"
-            )
-
-            with open(
-                audio_path,
-                "rb"
-            ) as audio_file:
-
-                audio_bytes = audio_file.read()
-
-            st.audio(
-                audio_bytes,
-                format="audio/mp3"
-            )
-
-
-            st.success(
-                "✅ ¡Traducción completada!"
-            )
-
+            with res_col2:
+                st.markdown("##### 🔊 Escuchar pronunciación")
+                with open(audio_path, "rb") as audio_file:
+                    st.audio(audio_file.read(), format="audio/mp3")
 
         except Exception as error:
-
-            st.error(
-                "❌ Ha ocurrido un problema al realizar "
-                "la traducción."
-            )
-
-            st.caption(
-                f"Información técnica: {error}"
-            )
+            st.error("❌ Ocurrió un error al procesar la traducción.")
+            st.caption(f"Detalle técnico: {error}")
 
 
 # ============================================================
 # IDIOMAS DISPONIBLES
 # ============================================================
 
-st.divider()
-
-st.header("🌍 Idiomas disponibles")
-
-st.write(
-    f"Actualmente puedes utilizar **{len(LANGUAGE_LIST)} idiomas:**"
-)
-
-
-language_columns = st.columns(4)
-
-
-for index, language in enumerate(LANGUAGE_LIST):
-
-    with language_columns[index % 4]:
-
-        st.write(language)
+with st.expander(f"🌍 Ver los {len(LANGUAGE_LIST)} idiomas compatibles"):
+    lang_cols = st.columns(4)
+    for idx, lang in enumerate(LANGUAGE_LIST):
+        with lang_cols[idx % 4]:
+            st.write(lang)
 
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-st.divider()
-
+st.markdown("---")
 st.markdown(
-    "<div class='footer-text'>"
-    "🌎 EasyTranslate<br>"
-    "Hecho por <strong>Juan Pablo López Gallego</strong>"
-    "</div>",
+    """
+    <div class="footer-text">
+        <strong>EasyTranslate</strong> — Aplicación Web de Reconocimiento y Traducción de Texto<br>
+        Creado por <strong>Juan Pablo López Gallego</strong>
+    </div>
+    """,
     unsafe_allow_html=True
 )
